@@ -1,11 +1,11 @@
-package com.bunggae.join
+package com.bunggae.rendezvous
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class JoinRestApplication
+class RendezvousRestApplication
 
 fun main(vararg args: String) {
-     runApplication<JoinRestApplication>(*args)
+     runApplication<RendezvousRestApplication>(*args)
 }
