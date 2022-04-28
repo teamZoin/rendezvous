@@ -1,5 +1,5 @@
 dependencies {
-    implementation(project(":join-core"))
+    implementation("javax.inject:javax.inject:1")
 }
 
 val jar: Jar by tasks

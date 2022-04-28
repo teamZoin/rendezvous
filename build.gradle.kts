@@ -34,12 +34,17 @@ subprojects {
         mavenCentral()
     }
 
-	group = "com.bunggae.join"
-	version = "0.0.1"
+    group = "com.bunggae.rendezvous"
+    version = "0.0.1"
 
     dependencies {
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+        testImplementation("io.kotest:kotest-runner-junit5:_")
+        testImplementation("io.kotest:kotest-assertions-core:_")
+        testImplementation("io.kotest:kotest-property:_")
+        testImplementation("io.kotest:kotest-framework-datatest:_")
     }
 }
 
