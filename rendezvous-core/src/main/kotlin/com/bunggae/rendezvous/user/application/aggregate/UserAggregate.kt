@@ -9,4 +9,5 @@ interface UserAggregate {
     // read
     fun findOneOrNull(id: Long): User?
     fun findByEmailOrNull(email: String): User?
+    fun findByServiceIdOrNull(serviceId: String): User?
 }
