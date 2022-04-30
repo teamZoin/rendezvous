@@ -14,25 +14,42 @@ import javax.persistence.Table
 @Table(name = "user")
 @SQLDelete(
     sql = """
-    UPDATE user SET updated_at = current_timestamp WHERE id = ?
+    UPDATE user SET deleted_at = current_timestamp WHERE id = ?
 """
 )
 class UserJpaRecord(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-    var username: String,
     var email: String,
     var password: String,
+    var serviceId: String,
+    var userName: String,
     var profileImgUrl: String? = null,
     override var deletedAt: LocalDateTime? = null,
 ) : JpaSoftDeletableEntity(deletedAt) {
-    fun toEntity(): User = User(id, username, email, password, profileImgUrl, createdAt, updatedAt, deletedAt)
+
+    fun toEntity(): User = User(
+        id = id,
+        email = email,
+        password = password,
+        serviceId = serviceId,
+        userName = userName,
+        profileImgUrl = profileImgUrl,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt,
+    )
 }
 
 fun User.toJpaRecord(): UserJpaRecord {
     val record = UserJpaRecord(
-        id, username, email, password, profileImgUrl
+        id = id,
+        email = email,
+        password = password,
+        serviceId = serviceId,
+        userName = userName,
+        profileImgUrl = profileImgUrl
     )
     record.createdAt = createdAt
     record.updatedAt = updatedAt

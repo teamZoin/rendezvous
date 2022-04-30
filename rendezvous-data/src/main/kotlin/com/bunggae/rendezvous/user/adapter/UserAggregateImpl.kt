@@ -28,4 +28,10 @@ class UserAggregateImpl(
             userJpaRepository.findByEmail(email)
         return userRecord?.toEntity()
     }
+
+    override fun findByServiceIdOrNull(serviceId: String): User? {
+        val userRecord =
+            userJpaRepository.findByServiceId(serviceId)
+        return userRecord?.toEntity()
+    }
 }
