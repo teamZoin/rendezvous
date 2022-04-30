@@ -17,10 +17,14 @@ class Controller(
     fun signUp(
         @RequestBody req: UserSignUpReqDto,
     ): Response<String> {
-        val (username, email, password) = req
+        val (email, password, userName, serviceId, profileImgUrl) = req
         createUserUseCase.execute(
             CreateUserUseCase.Command(
-                username, password, email
+                email = email,
+                password = password,
+                userName = userName,
+                serviceId = serviceId,
+                profileImgUrl = profileImgUrl,
             )
         )
         return Response(

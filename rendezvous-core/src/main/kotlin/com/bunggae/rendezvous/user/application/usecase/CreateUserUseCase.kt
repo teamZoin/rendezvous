@@ -2,25 +2,33 @@ package com.bunggae.rendezvous.user.application.usecase
 
 import com.bunggae.rendezvous.user.application.aggregate.UserAggregate
 import com.bunggae.rendezvous.user.domain.User
+import com.bunggae.rendezvous.user.domain.UserValidator
 import javax.inject.Named
 
 @Named
 class CreateUserUseCase(
     private val userAggregate: UserAggregate,
+    private val userValidator: UserValidator,
 ) {
     data class Command(
-        val username: String,
-        val password: String,
         val email: String,
+        val password: String,
+        val userName: String,
+        val serviceId: String,
+        val profileImgUrl: String,
     )
     fun execute(command: Command) {
-        val (username, password, email) = command
+        val (email, password, userName, serviceId, profileImgUrl) = command
+
         val user = User(
-            username = username,
+            userName = userName,
             password = password,
             email = email,
+            serviceId =  serviceId,
+            profileImgUrl = profileImgUrl,
         )
-        if (user.hasDuplicatedEmail(userAggregate)) throw IllegalArgumentException("Duplicated email.")
+
+        userValidator.validate(user)
         userAggregate.save(user)
     }
 }
