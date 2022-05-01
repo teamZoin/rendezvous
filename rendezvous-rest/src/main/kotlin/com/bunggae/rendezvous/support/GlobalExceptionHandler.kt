@@ -1,6 +1,5 @@
 package com.bunggae.rendezvous.support
 
-import com.bunggae.rendezvous.common.Exception
 import com.bunggae.rendezvous.common.Response
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -10,15 +9,19 @@ import java.time.LocalDateTime
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
-    @ExceptionHandler(Exception::class)
-    fun applicationException(e: Exception): ResponseEntity<Response<String>> =
-        ResponseEntity
-            .status(e.error.status)
-            .body(Response(LocalDateTime.now(), e.error.status.value(), e.message))
+    @ExceptionHandler(value = [IllegalStateException::class, IllegalArgumentException::class])
+    fun clientException(e: RuntimeException): ResponseEntity<Response<String>> =
+        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(
+                Response(
+                    timestamp = LocalDateTime.now(),
+                    status = HttpStatus.BAD_REQUEST.value(),
+                    message = e.toString()
+                )
+            )
 
     @ExceptionHandler(RuntimeException::class)
     fun runtimeException(e: RuntimeException): ResponseEntity<Response<String>> =
-        ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(Response(LocalDateTime.now(), 500, e.message))
 }
