@@ -1,5 +1,5 @@
 dependencies {
-    implementation("javax.inject:javax.inject:1")
+    implementation("javax.inject:javax.inject:_")
 }
 
 val jar: Jar by tasks
