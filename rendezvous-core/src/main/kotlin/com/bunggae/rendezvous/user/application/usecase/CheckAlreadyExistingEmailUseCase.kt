@@ -11,8 +11,6 @@ class CheckAlreadyExistingEmailUseCase(
         val email: String,
     )
 
-    fun execute(query: Query): Boolean {
-        userAggregate.findByEmailOrNull(query.email) ?: return false
-        return true
-    }
+    fun execute(query: Query): Boolean =
+        userAggregate.findByEmailOrNull(query.email) != null
 }
