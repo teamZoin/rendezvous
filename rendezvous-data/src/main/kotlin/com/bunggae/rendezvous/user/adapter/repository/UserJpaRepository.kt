@@ -6,5 +6,4 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface UserJpaRepository: JpaRepository<UserJpaRecord, Long> {
     fun findByEmail(email: String): UserJpaRecord?
     fun findByServiceId(serviceId: String): UserJpaRecord?
-    fun findByEmailAndPassword(email: String, password: String): UserJpaRecord?
 }

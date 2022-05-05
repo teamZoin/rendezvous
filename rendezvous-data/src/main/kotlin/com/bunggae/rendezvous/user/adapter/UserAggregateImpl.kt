@@ -34,9 +34,4 @@ class UserAggregateImpl(
             userJpaRepository.findByServiceId(serviceId)
         return userRecord?.toEntity()
     }
-
-    override fun findByEmailAndPasswordOrNull(email: String, password: String): User? {
-        val userRecord = userJpaRepository.findByEmailAndPassword(email, password)
-        return userRecord?.toEntity()
-    }
 }
