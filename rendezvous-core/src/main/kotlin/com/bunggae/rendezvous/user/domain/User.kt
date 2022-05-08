@@ -1,12 +1,12 @@
 package com.bunggae.rendezvous.user.domain
 
+import com.bunggae.rendezvous.user.application.aggregate.UserAggregate
 import java.time.LocalDateTime
 
 class User(
     var id: Long? = null,
     var email: String,
-    var hashedPassword: ByteArray,
-    var salt: ByteArray,
+    var password: String,
     var serviceId: String,
     var userName: String,
     var profileImgUrl: String? = null,

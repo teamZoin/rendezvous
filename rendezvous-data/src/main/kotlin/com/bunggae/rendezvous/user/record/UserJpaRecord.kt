@@ -22,8 +22,7 @@ class UserJpaRecord(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     var email: String,
-    var hashedPassword: ByteArray,
-    var salt: ByteArray,
+    var password: String,
     var serviceId: String,
     var userName: String,
     var profileImgUrl: String? = null,
@@ -33,8 +32,7 @@ class UserJpaRecord(
     fun toEntity(): User = User(
         id = id,
         email = email,
-        hashedPassword = hashedPassword,
-        salt = salt,
+        password = password,
         serviceId = serviceId,
         userName = userName,
         profileImgUrl = profileImgUrl,
@@ -48,8 +46,7 @@ fun User.toJpaRecord(): UserJpaRecord {
     val record = UserJpaRecord(
         id = id,
         email = email,
-        hashedPassword = hashedPassword,
-        salt = salt,
+        password = password,
         serviceId = serviceId,
         userName = userName,
         profileImgUrl = profileImgUrl

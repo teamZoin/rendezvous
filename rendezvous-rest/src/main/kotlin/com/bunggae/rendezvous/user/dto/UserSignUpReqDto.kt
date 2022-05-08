@@ -7,3 +7,4 @@ data class UserSignUpReqDto(
     val serviceId: String,
     val profileImgUrl: String,
 )
+
