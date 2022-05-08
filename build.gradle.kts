@@ -5,6 +5,7 @@ plugins {
     idea
     id("org.springframework.boot") version "2.6.7"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
@@ -29,6 +30,7 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "kotlin-spring")
     apply(plugin = "kotlin-jpa")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
     repositories {
         mavenCentral()
@@ -43,6 +45,8 @@ subprojects {
 
         implementation("io.github.microutils:kotlin-logging:_")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:_")
+
+        testImplementation("io.mockk:mockk:_")
 
         testImplementation("io.kotest:kotest-runner-junit5:_")
         testImplementation("io.kotest:kotest-assertions-core:_")
