@@ -4,9 +4,11 @@ import com.bunggae.rendezvous.common.Response
 import com.bunggae.rendezvous.user.application.usecase.CheckAlreadyExistingEmailUseCase
 import com.bunggae.rendezvous.user.application.usecase.CheckAlreadyExistingServiceIdUseCase
 import com.bunggae.rendezvous.user.application.usecase.CreateUserUseCase
+import com.bunggae.rendezvous.user.application.usecase.LoginUseCase
 import com.bunggae.rendezvous.user.application.usecase.SendVerificationEmailUseCase
 import com.bunggae.rendezvous.user.dto.CheckExistingServiceIdReqDto
 import com.bunggae.rendezvous.user.dto.CheckExitingEmailReqDto
+import com.bunggae.rendezvous.user.dto.UserLogInReqDto
 import com.bunggae.rendezvous.user.dto.UserSignUpReqDto
 import com.bunggae.rendezvous.user.dto.VerifyEmailReqDto
 import org.springframework.http.HttpStatus
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/user")
 class Controller(
     private val createUserUseCase: CreateUserUseCase,
+    private val loginUseCase: LoginUseCase,
     private val checkAlreadyExistingEmailUseCase: CheckAlreadyExistingEmailUseCase,
     private val checkAlreadyExistingServiceIdUseCase: CheckAlreadyExistingServiceIdUseCase,
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
@@ -40,6 +43,27 @@ class Controller(
         return Response(
             status = HttpStatus.OK.value(),
             message = "회원가입 성공",
+        )
+    }
+
+    @PostMapping("/log-in")
+    fun logIn(
+        @RequestBody req: UserLogInReqDto,
+    ): Response<String> {
+        val (email, password) = req
+
+        loginUseCase.execute(
+            LoginUseCase.Query(
+                email = email,
+                password = password,
+            )
+        )
+
+        // TODO: generate JWT
+        return Response(
+            status = HttpStatus.OK.value(),
+            message = "로그인 성공",
+            data = "JWT"
         )
     }
 

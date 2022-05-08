@@ -2,6 +2,7 @@ dependencies {
     implementation(project(":rendezvous-core"))
     implementation(project(":rendezvous-data"))
     implementation(project(":rendezvous-infra"))
+    implementation(project(":rendezvous-util"))
 
     // spring
     implementation("org.springframework.boot:spring-boot-starter")
