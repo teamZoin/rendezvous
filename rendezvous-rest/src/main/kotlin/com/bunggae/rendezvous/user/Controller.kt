@@ -1,11 +1,18 @@
 package com.bunggae.rendezvous.user
 
 import com.bunggae.rendezvous.common.Response
-import com.bunggae.rendezvous.user.application.usecase.*
-import com.bunggae.rendezvous.user.dto.*
+import com.bunggae.rendezvous.user.application.usecase.CheckAlreadyExistingEmailUseCase
+import com.bunggae.rendezvous.user.application.usecase.CheckAlreadyExistingServiceIdUseCase
+import com.bunggae.rendezvous.user.application.usecase.CreateUserUseCase
+import com.bunggae.rendezvous.user.application.usecase.LoginUseCase
+import com.bunggae.rendezvous.user.application.usecase.SendVerificationEmailUseCase
+import com.bunggae.rendezvous.user.dto.CheckExistingServiceIdReqDto
+import com.bunggae.rendezvous.user.dto.CheckExitingEmailReqDto
+import com.bunggae.rendezvous.user.dto.UserLogInReqDto
+import com.bunggae.rendezvous.user.dto.UserSignUpReqDto
+import com.bunggae.rendezvous.user.dto.VerifyEmailReqDto
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -15,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController
 class Controller(
     private val createUserUseCase: CreateUserUseCase,
     private val loginUseCase: LoginUseCase,
-    private val updateUserProfileImageUseCase: UpdateUserProfileImageUseCase,
     private val checkAlreadyExistingEmailUseCase: CheckAlreadyExistingEmailUseCase,
     private val checkAlreadyExistingServiceIdUseCase: CheckAlreadyExistingServiceIdUseCase,
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
@@ -93,23 +99,6 @@ class Controller(
         return Response(
             status = HttpStatus.OK.value(),
             message = "인증 이메일 전송에 성공했습니다."
-        )
-    }
-
-    @PutMapping("/profile-image")
-    fun updateProfileImage(
-        @RequestBody req: UpdateUserProfileImageReqDto,
-    ): Response<UpdateUserProfileImageResDto> {
-
-        val user = updateUserProfileImageUseCase.execute(UpdateUserProfileImageUseCase.Command(req.userId, req.profileImgUrl))
-
-        return Response(
-            status = HttpStatus.OK.value(),
-            message = "프로필 이미지 업데이트에 성공했습니다.",
-            data = UpdateUserProfileImageResDto(
-                userId = user.id!!,
-                profileImgUrl = user.profileImgUrl ?: "",
-            )
         )
     }
 }
