@@ -1,10 +1,20 @@
-package com.bunggae.rendezvous.w
+package com.bunggae.rendezvous.base
 
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
+import javax.persistence.Column
+import javax.persistence.EntityListeners
 import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
-open class JpaBaseEntity(
-    var createdAt: LocalDateTime = LocalDateTime.now(),
-    var updatedAt: LocalDateTime = LocalDateTime.now()
-)
+@EntityListeners(AuditingEntityListener::class)
+abstract class JpaBaseEntity{
+    @CreatedDate
+    @Column(columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    lateinit var createdAt: LocalDateTime
+
+    @LastModifiedDate
+    lateinit var updatedAt: LocalDateTime
+}
