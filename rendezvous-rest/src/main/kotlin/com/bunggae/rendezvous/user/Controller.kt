@@ -3,11 +3,13 @@ package com.bunggae.rendezvous.user
 import com.bunggae.rendezvous.common.Response
 import com.bunggae.rendezvous.user.application.usecase.CheckAlreadyExistingEmailUseCase
 import com.bunggae.rendezvous.user.application.usecase.CheckAlreadyExistingServiceIdUseCase
+import com.bunggae.rendezvous.user.application.usecase.VerifyEmailCodeUseCase
 import com.bunggae.rendezvous.user.application.usecase.CreateUserUseCase
 import com.bunggae.rendezvous.user.application.usecase.LoginUseCase
 import com.bunggae.rendezvous.user.application.usecase.SendVerificationEmailUseCase
 import com.bunggae.rendezvous.user.dto.CheckExistingServiceIdReqDto
 import com.bunggae.rendezvous.user.dto.CheckExitingEmailReqDto
+import com.bunggae.rendezvous.user.dto.ConfirmEmailReqDto
 import com.bunggae.rendezvous.user.dto.UserLogInReqDto
 import com.bunggae.rendezvous.user.dto.UserSignUpReqDto
 import com.bunggae.rendezvous.user.dto.VerifyEmailReqDto
@@ -25,6 +27,7 @@ class Controller(
     private val checkAlreadyExistingEmailUseCase: CheckAlreadyExistingEmailUseCase,
     private val checkAlreadyExistingServiceIdUseCase: CheckAlreadyExistingServiceIdUseCase,
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
+    private val verifyEmailCodeUseCase: VerifyEmailCodeUseCase,
 ) {
     @PostMapping("/sign-up")
     fun signUp(
@@ -91,7 +94,7 @@ class Controller(
         )
     }
 
-    @PostMapping("/verification")
+    @PostMapping("/email/auth")
     fun sendEmailVerification(
         @RequestBody req: VerifyEmailReqDto
     ): Response<Unit> {
@@ -99,6 +102,20 @@ class Controller(
         return Response(
             status = HttpStatus.OK.value(),
             message = "인증 이메일 전송에 성공했습니다."
+        )
+    }
+
+    @PostMapping("/email")
+    fun confirmEmailByCode(
+        @RequestBody req: ConfirmEmailReqDto,
+    ): Response<Unit> {
+        val isCodeCorrect = verifyEmailCodeUseCase.execute(VerifyEmailCodeUseCase.Query(
+            email = req.email,
+            code = req.code,
+        ))
+        return Response(
+            status = HttpStatus.OK.value(),
+            message = if (isCodeCorrect) "이메일 인증 성공" else "인증번호가 일치하지 않습니다"
         )
     }
 }
