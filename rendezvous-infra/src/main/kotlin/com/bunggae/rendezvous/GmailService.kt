@@ -39,10 +39,10 @@ class GmailService(
         val session = getSession()
         val message = MimeMessage(session)
 
-        message.setFrom(InternetAddress(address))
+        message.setFrom(InternetAddress("no_reply@gmail.com", "Zoin"))
         message.addRecipient(Message.RecipientType.TO, InternetAddress(targetEmail))
-        message.subject = "벙개 - 가입 인증 코드"
-        message.setText("벙개 가입을 환영합니다! \n 인증 코드는 [$code] 입니다!")
+        message.subject = "조인 - 가입 인증 코드"
+        message.setText("조인 가입을 환영합니다! \n 인증 코드는 [$code] 입니다!")
 
         Transport.send(message)
     }
