@@ -23,8 +23,10 @@ class GmailService(
     private val props = Properties().apply {
         this["mail.smtp.auth"] = "true"
         this["mail.smtp.host"] = "smtp.gmail.com"
-        this["mail.smtp.port"] = 465
-        this["mail.smtp.ssl.enable"] = "true"
+//        this["mail.smtp.port"] = 465
+        this["mail.smtp.port"] = 587
+//        this["mail.smtp.ssl.enable"] = "true"
+        this["mail.smtp.starttls.enable"] = "true"
         this["mail.smtp.ssl.trust"] = "smtp.gmail.com"
     }
 
