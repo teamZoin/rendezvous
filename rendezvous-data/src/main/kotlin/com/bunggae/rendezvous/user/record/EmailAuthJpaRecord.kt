@@ -16,6 +16,7 @@ class EmailAuthJpaRecord(
     val id: Long? = null,
     val email: String,
     val code: String,
+    val isVerified: Boolean? = false,
 ) : JpaBaseEntity() {
     fun toEntity() = EmailAuth(
         email,
@@ -27,4 +28,5 @@ class EmailAuthJpaRecord(
 fun EmailAuth.toRecord() = EmailAuthJpaRecord(
     email = email,
     code = code,
+    isVerified = isVerified,
 )

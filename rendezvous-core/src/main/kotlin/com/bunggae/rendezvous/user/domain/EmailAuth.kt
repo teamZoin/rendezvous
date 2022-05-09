@@ -6,4 +6,5 @@ data class EmailAuth(
     val email: String,
     val code: String,
     val expiresAt: LocalDateTime? = null,
+    var isVerified: Boolean? = false,
 )
