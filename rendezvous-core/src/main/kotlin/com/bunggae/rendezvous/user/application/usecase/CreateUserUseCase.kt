@@ -27,7 +27,7 @@ class CreateUserUseCase(
             hashedPassword = passwordEncoder.encode(salt, password),
             salt = salt,
             email = email,
-            serviceId =  serviceId,
+            serviceId = serviceId,
             profileImgUrl = profileImgUrl,
         )
 

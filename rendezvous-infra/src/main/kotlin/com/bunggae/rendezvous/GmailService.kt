@@ -10,7 +10,7 @@ import jakarta.mail.Transport
 import jakarta.mail.internet.AddressException
 import jakarta.mail.internet.InternetAddress
 import jakarta.mail.internet.MimeMessage
-import java.util.*
+import java.util.Properties
 import javax.inject.Named
 
 @Named
@@ -28,11 +28,14 @@ class GmailService(
         this["mail.smtp.ssl.trust"] = "smtp.gmail.com"
     }
 
-    private fun getSession() = Session.getInstance(props, object : Authenticator() {
-        override fun getPasswordAuthentication(): PasswordAuthentication {
-            return PasswordAuthentication(address, password)
+    private fun getSession() = Session.getInstance(
+        props,
+        object : Authenticator() {
+            override fun getPasswordAuthentication(): PasswordAuthentication {
+                return PasswordAuthentication(address, password)
+            }
         }
-    })
+    )
 
     @Throws(AddressException::class, MessagingException::class)
     override fun sendVerificationEmail(targetEmail: String, code: String) {
