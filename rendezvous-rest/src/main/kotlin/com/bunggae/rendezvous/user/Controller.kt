@@ -1,8 +1,19 @@
 package com.bunggae.rendezvous.user
 
 import com.bunggae.rendezvous.common.Response
-import com.bunggae.rendezvous.user.application.usecase.*
-import com.bunggae.rendezvous.user.dto.*
+import com.bunggae.rendezvous.user.application.usecase.CheckAlreadyExistingEmailUseCase
+import com.bunggae.rendezvous.user.application.usecase.CheckAlreadyExistingServiceIdUseCase
+import com.bunggae.rendezvous.user.application.usecase.CreateUserUseCase
+import com.bunggae.rendezvous.user.application.usecase.LoginUseCase
+import com.bunggae.rendezvous.user.application.usecase.SendVerificationEmailUseCase
+import com.bunggae.rendezvous.user.application.usecase.UpdateUserProfileImageUseCase
+import com.bunggae.rendezvous.user.dto.CheckExistingServiceIdReqDto
+import com.bunggae.rendezvous.user.dto.CheckExitingEmailReqDto
+import com.bunggae.rendezvous.user.dto.UpdateUserProfileImageReqDto
+import com.bunggae.rendezvous.user.dto.UpdateUserProfileImageResDto
+import com.bunggae.rendezvous.user.dto.UserLogInReqDto
+import com.bunggae.rendezvous.user.dto.UserSignUpReqDto
+import com.bunggae.rendezvous.user.dto.VerifyEmailReqDto
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -101,7 +112,8 @@ class Controller(
         @RequestBody req: UpdateUserProfileImageReqDto,
     ): Response<UpdateUserProfileImageResDto> {
 
-        val user = updateUserProfileImageUseCase.execute(UpdateUserProfileImageUseCase.Command(req.userId, req.profileImgUrl))
+        val user =
+            updateUserProfileImageUseCase.execute(UpdateUserProfileImageUseCase.Command(req.userId, req.profileImgUrl))
 
         return Response(
             status = HttpStatus.OK.value(),
@@ -113,4 +125,3 @@ class Controller(
         )
     }
 }
-
