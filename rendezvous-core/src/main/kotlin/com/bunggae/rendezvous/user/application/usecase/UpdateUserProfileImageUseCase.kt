@@ -11,11 +11,11 @@ class UpdateUserProfileImageUseCase(
     data class Command(val userId: Long, val profileImgUrl: String)
 
     fun execute(command: Command): User {
-        val(userId, profileImgUrl) = command
+        val (userId, profileImgUrl) = command
 
         val user = userAggregate.findOneOrNull(userId) ?: throw IllegalArgumentException("user not found")
 
-        user.profileImgUrl = profileImgUrl
+        user.changeProfileImg(profileImgUrl)
         userAggregate.save(user)
         return user
     }
