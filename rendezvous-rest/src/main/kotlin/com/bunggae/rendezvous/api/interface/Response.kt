@@ -1,4 +1,4 @@
-package com.bunggae.rendezvous.common
+package com.bunggae.rendezvous.api.`interface`
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime

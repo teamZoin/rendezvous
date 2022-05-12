@@ -1,7 +1,6 @@
-package com.bunggae.rendezvous.user.dto
+package com.bunggae.rendezvous.api.`interface`.dto
 
 class UpdateUserProfileImageReqDto(
-    val userId: Long, // TODO: header JWT 로 대체
     val profileImgUrl: String
 )
 

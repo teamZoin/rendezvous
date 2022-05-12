@@ -1,4 +1,4 @@
-package com.bunggae.rendezvous.user.dto
+package com.bunggae.rendezvous.api.`interface`.dto
 
 data class UserLogInReqDto(
     val email: String,
