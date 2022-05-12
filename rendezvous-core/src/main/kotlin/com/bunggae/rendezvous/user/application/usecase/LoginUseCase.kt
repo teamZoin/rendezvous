@@ -11,9 +11,10 @@ class LoginUseCase(
 ) {
     data class Query(val email: String, val password: String)
 
-    fun execute(query: Query) {
+    fun execute(query: Query): Long {
         val user = userAggregate.findByEmailOrNull(query.email) ?: throw IllegalArgumentException("존재하지 않는 이메일입니다.")
         val hashedPassword = passwordEncoder.encode(user.salt, query.password)
         if (!user.hashedPassword.contentEquals(hashedPassword)) throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
+        return user.id!!
     }
 }

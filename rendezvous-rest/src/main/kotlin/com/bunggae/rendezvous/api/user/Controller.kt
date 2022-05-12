@@ -1,19 +1,22 @@
-package com.bunggae.rendezvous.user
+package com.bunggae.rendezvous.api.user
 
-import com.bunggae.rendezvous.common.Response
+import com.bunggae.rendezvous.api.`interface`.Response
+import com.bunggae.rendezvous.api.`interface`.dto.CheckExistingServiceIdReqDto
+import com.bunggae.rendezvous.api.`interface`.dto.CheckExitingEmailReqDto
+import com.bunggae.rendezvous.api.`interface`.dto.UpdateUserProfileImageReqDto
+import com.bunggae.rendezvous.api.`interface`.dto.UpdateUserProfileImageResDto
+import com.bunggae.rendezvous.api.`interface`.dto.UserLogInReqDto
+import com.bunggae.rendezvous.api.`interface`.dto.UserSignUpReqDto
+import com.bunggae.rendezvous.api.`interface`.dto.VerifyEmailReqDto
+import com.bunggae.rendezvous.resolver.AuthTokenPayload
 import com.bunggae.rendezvous.user.application.usecase.CheckAlreadyExistingEmailUseCase
 import com.bunggae.rendezvous.user.application.usecase.CheckAlreadyExistingServiceIdUseCase
 import com.bunggae.rendezvous.user.application.usecase.CreateUserUseCase
 import com.bunggae.rendezvous.user.application.usecase.LoginUseCase
 import com.bunggae.rendezvous.user.application.usecase.SendVerificationEmailUseCase
 import com.bunggae.rendezvous.user.application.usecase.UpdateUserProfileImageUseCase
-import com.bunggae.rendezvous.user.dto.CheckExistingServiceIdReqDto
-import com.bunggae.rendezvous.user.dto.CheckExitingEmailReqDto
-import com.bunggae.rendezvous.user.dto.UpdateUserProfileImageReqDto
-import com.bunggae.rendezvous.user.dto.UpdateUserProfileImageResDto
-import com.bunggae.rendezvous.user.dto.UserLogInReqDto
-import com.bunggae.rendezvous.user.dto.UserSignUpReqDto
-import com.bunggae.rendezvous.user.dto.VerifyEmailReqDto
+import com.bunggae.rendezvous.util.authToken.AuthTokenUtil
+import com.bunggae.rendezvous.util.authToken.TokenPayload
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -30,6 +33,7 @@ class Controller(
     private val checkAlreadyExistingEmailUseCase: CheckAlreadyExistingEmailUseCase,
     private val checkAlreadyExistingServiceIdUseCase: CheckAlreadyExistingServiceIdUseCase,
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
+    private val authTokenUtil: AuthTokenUtil,
 ) {
     @PostMapping("/sign-up")
     fun signUp(
@@ -57,18 +61,23 @@ class Controller(
     ): Response<String> {
         val (email, password) = req
 
-        loginUseCase.execute(
+        val userId = loginUseCase.execute(
             LoginUseCase.Query(
                 email = email,
                 password = password,
             )
         )
 
-        // TODO: generate JWT
+        val authToken = authTokenUtil.generateToken(
+            TokenPayload(
+                userId = userId
+            )
+        )
+
         return Response(
             status = HttpStatus.OK.value(),
             message = "로그인 성공",
-            data = "JWT"
+            data = authToken,
         )
     }
 
@@ -109,11 +118,13 @@ class Controller(
 
     @PutMapping("/profile-image")
     fun updateProfileImage(
+        @AuthTokenPayload payload: TokenPayload,
         @RequestBody req: UpdateUserProfileImageReqDto,
     ): Response<UpdateUserProfileImageResDto> {
 
+        val (userId) = payload
         val user =
-            updateUserProfileImageUseCase.execute(UpdateUserProfileImageUseCase.Command(req.userId, req.profileImgUrl))
+            updateUserProfileImageUseCase.execute(UpdateUserProfileImageUseCase.Command(userId, req.profileImgUrl))
 
         return Response(
             status = HttpStatus.OK.value(),

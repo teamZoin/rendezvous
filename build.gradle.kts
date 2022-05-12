@@ -47,11 +47,12 @@ subprojects {
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:_")
 
         testImplementation("io.mockk:mockk:_")
-
         testImplementation("io.kotest:kotest-runner-junit5:_")
         testImplementation("io.kotest:kotest-assertions-core:_")
         testImplementation("io.kotest:kotest-property:_")
         testImplementation("io.kotest:kotest-framework-datatest:_")
+        testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:_")
+        testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:_")
     }
 }
 
@@ -62,6 +63,6 @@ tasks.withType<KotlinCompile> {
     }
 }
 
-tasks.withType<Test> {
+tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
