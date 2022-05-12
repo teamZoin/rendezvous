@@ -2,8 +2,10 @@ package com.bunggae.rendezvous
 
 class InfraEnvHolder(
     private val activeProfiles: Array<String>,
+
 ) {
     lateinit var emailConfig: EmailConfig
+    lateinit var jwtSecretKey: String
 
     companion object {
         const val PROFILE_LOCAL = "local"
