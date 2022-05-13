@@ -12,7 +12,7 @@ plugins {
     kotlin("kapt") version "1.6.21"
 }
 
-group = "com.bunggae"
+group = "com.zoin"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
@@ -36,7 +36,7 @@ subprojects {
         mavenCentral()
     }
 
-    group = "com.bunggae.rendezvous"
+    group = "com.zoin.rendezvous"
     version = "0.0.1"
 
     dependencies {
