@@ -1,5 +1,7 @@
 dependencies {
     implementation("javax.inject:javax.inject:_")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:_")
+    implementation("mysql:mysql-connector-java:_")
 }
 
 val jar: Jar by tasks

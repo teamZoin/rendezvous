@@ -1,6 +1,5 @@
 dependencies {
     implementation(project(":rendezvous-core"))
-    implementation(project(":rendezvous-data"))
     implementation(project(":rendezvous-infra"))
     implementation(project(":rendezvous-util"))
 

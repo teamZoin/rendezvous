@@ -1,19 +1,19 @@
-package com.bunggae.rendezvous.user.application.usecase
+package com.bunggae.rendezvous.domain.user.usecase
 
-import com.bunggae.rendezvous.user.application.aggregate.UserAggregate
-import com.bunggae.rendezvous.user.domain.User
+import com.bunggae.rendezvous.domain.user.User
+import com.bunggae.rendezvous.domain.user.repository.UserRepository
 import javax.inject.Named
 
 @Named
 class UpdateUserProfileImageUseCase(
-    private val userAggregate: UserAggregate,
+    private val userAggregate: UserRepository,
 ) {
     data class Command(val userId: Long, val profileImgUrl: String)
 
     fun execute(command: Command): User {
         val (userId, profileImgUrl) = command
 
-        val user = userAggregate.findOneOrNull(userId) ?: throw IllegalArgumentException("user not found")
+        val user = userAggregate.findById(userId).orElseThrow { IllegalArgumentException("user not found") }
 
         user.changeProfileImg(profileImgUrl)
         userAggregate.save(user)

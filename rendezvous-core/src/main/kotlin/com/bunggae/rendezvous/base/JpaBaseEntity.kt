@@ -1,4 +1,4 @@
-package com.bunggae.rendezvous.w
+package com.bunggae.rendezvous.base
 
 import java.time.LocalDateTime
 import javax.persistence.MappedSuperclass

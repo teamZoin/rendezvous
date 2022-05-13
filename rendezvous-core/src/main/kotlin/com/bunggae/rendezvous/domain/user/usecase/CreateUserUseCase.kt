@@ -1,14 +1,14 @@
-package com.bunggae.rendezvous.user.application.usecase
+package com.bunggae.rendezvous.domain.user.usecase
 
-import com.bunggae.rendezvous.user.application.aggregate.UserAggregate
-import com.bunggae.rendezvous.user.domain.User
-import com.bunggae.rendezvous.user.domain.UserValidator
+import com.bunggae.rendezvous.domain.user.User
+import com.bunggae.rendezvous.domain.user.UserValidator
+import com.bunggae.rendezvous.domain.user.repository.UserRepository
 import com.bunggae.rendezvous.util.PasswordEncoder
 import javax.inject.Named
 
 @Named
 class CreateUserUseCase(
-    private val userAggregate: UserAggregate,
+    private val userRepository: UserRepository,
     private val userValidator: UserValidator,
     private val passwordEncoder: PasswordEncoder,
 ) {
@@ -19,6 +19,7 @@ class CreateUserUseCase(
         val serviceId: String,
         val profileImgUrl: String,
     )
+
     fun execute(command: Command) {
         val (email, password, userName, serviceId, profileImgUrl) = command
         val salt = passwordEncoder.generateSalt()
@@ -32,6 +33,6 @@ class CreateUserUseCase(
         )
 
         userValidator.validate(user)
-        userAggregate.save(user)
+        userRepository.save(user)
     }
 }

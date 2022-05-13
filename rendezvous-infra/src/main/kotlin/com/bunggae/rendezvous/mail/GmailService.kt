@@ -1,7 +1,7 @@
 package com.bunggae.rendezvous.mail
 
 import com.bunggae.rendezvous.InfraEnvHolder
-import com.bunggae.rendezvous.user.application.infra.MailService
+import com.bunggae.rendezvous.infra.MailService
 import jakarta.mail.Authenticator
 import jakarta.mail.Message
 import jakarta.mail.MessagingException

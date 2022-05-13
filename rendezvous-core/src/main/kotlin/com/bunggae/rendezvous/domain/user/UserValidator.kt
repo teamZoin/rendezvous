@@ -1,11 +1,11 @@
-package com.bunggae.rendezvous.user.domain
+package com.bunggae.rendezvous.domain.user
 
-import com.bunggae.rendezvous.user.application.aggregate.UserAggregate
+import com.bunggae.rendezvous.domain.user.repository.UserRepository
 import javax.inject.Named
 
 @Named
 class UserValidator(
-    private val userAggregate: UserAggregate,
+    private val userRepository: UserRepository,
 ) {
     fun validate(newUser: User) {
         if (hasDuplicatedEmail(newUser.email)) throw IllegalArgumentException("email already exists.")
@@ -13,12 +13,12 @@ class UserValidator(
     }
 
     private fun hasDuplicatedEmail(email: String): Boolean {
-        val alreadyUser = userAggregate.findByEmailOrNull(email)
+        val alreadyUser = userRepository.findByEmail(email)
         return alreadyUser != null
     }
 
     private fun hasDuplicatedServiceId(serviceId: String): Boolean {
-        val alreadyUser = userAggregate.findByServiceIdOrNull(serviceId)
+        val alreadyUser = userRepository.findByServiceId(serviceId)
         return alreadyUser != null
     }
 }

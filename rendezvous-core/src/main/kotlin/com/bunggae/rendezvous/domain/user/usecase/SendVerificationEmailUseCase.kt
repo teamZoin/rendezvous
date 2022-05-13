@@ -1,6 +1,6 @@
-package com.bunggae.rendezvous.user.application.usecase
+package com.bunggae.rendezvous.domain.user.usecase
 
-import com.bunggae.rendezvous.user.application.infra.MailService
+import com.bunggae.rendezvous.infra.MailService
 import javax.inject.Named
 
 @Named
