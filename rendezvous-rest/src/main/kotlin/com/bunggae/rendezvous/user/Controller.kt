@@ -6,9 +6,11 @@ import com.bunggae.rendezvous.user.application.usecase.CheckAlreadyExistingServi
 import com.bunggae.rendezvous.user.application.usecase.CreateUserUseCase
 import com.bunggae.rendezvous.user.application.usecase.LoginUseCase
 import com.bunggae.rendezvous.user.application.usecase.SendVerificationEmailUseCase
+import com.bunggae.rendezvous.user.application.usecase.UpdateUserNotificationUseCase
 import com.bunggae.rendezvous.user.application.usecase.UpdateUserProfileImageUseCase
 import com.bunggae.rendezvous.user.dto.CheckExistingServiceIdReqDto
 import com.bunggae.rendezvous.user.dto.CheckExitingEmailReqDto
+import com.bunggae.rendezvous.user.dto.SetUserNotificationReqDto
 import com.bunggae.rendezvous.user.dto.UpdateUserProfileImageReqDto
 import com.bunggae.rendezvous.user.dto.UpdateUserProfileImageResDto
 import com.bunggae.rendezvous.user.dto.UserLogInReqDto
@@ -30,6 +32,7 @@ class Controller(
     private val checkAlreadyExistingEmailUseCase: CheckAlreadyExistingEmailUseCase,
     private val checkAlreadyExistingServiceIdUseCase: CheckAlreadyExistingServiceIdUseCase,
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
+    private val updateUserNotificationUseCase: UpdateUserNotificationUseCase,
 ) {
     @PostMapping("/sign-up")
     fun signUp(
@@ -123,5 +126,14 @@ class Controller(
                 profileImgUrl = user.profileImgUrl ?: "",
             )
         )
+    }
+
+    @PutMapping("/notification")
+    fun setUserNotificationOnOrOff(
+        @RequestBody setUserNotificationReqDto: SetUserNotificationReqDto,
+    ) {
+        val (on) = setUserNotificationReqDto
+        // TODO: JWT decode 해서 userId 넣어주기
+        updateUserNotificationUseCase.execute(UpdateUserNotificationUseCase.Command(1, on))
     }
 }
