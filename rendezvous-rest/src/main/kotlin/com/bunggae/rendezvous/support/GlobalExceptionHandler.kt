@@ -1,6 +1,6 @@
 package com.bunggae.rendezvous.support
 
-import com.bunggae.rendezvous.common.Response
+import com.bunggae.rendezvous.api.`interface`.Response
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
