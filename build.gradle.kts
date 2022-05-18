@@ -12,7 +12,7 @@ plugins {
     kotlin("kapt") version "1.6.21"
 }
 
-group = "com.bunggae"
+group = "com.zoin"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
@@ -20,7 +20,12 @@ repositories {
     mavenCentral()
 }
 
-subprojects {
+val springProjects = listOf(
+    project(":rendezvous-core"),
+    project(":rendezvous-rest"),
+)
+
+configure(springProjects) {
     apply(plugin = "java")
     apply(plugin = "idea")
     apply(plugin = "kotlin")
@@ -36,8 +41,27 @@ subprojects {
         mavenCentral()
     }
 
-    group = "com.bunggae.rendezvous"
-    version = "0.0.1"
+    dependencies {
+        testImplementation("org.springframework.boot:spring-boot-starter-test") {
+            exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+        }
+        testImplementation("io.kotest.extensions:kotest-extensions-spring:_")
+        testImplementation("com.ninja-squad:springmockk:_")
+    }
+}
+
+subprojects {
+    apply(plugin = "java")
+    apply(plugin = "idea")
+    apply(plugin = "kotlin")
+    apply(plugin = "kotlin-kapt")
+
+    apply(plugin = "io.spring.dependency-management")
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+
+    repositories {
+        mavenCentral()
+    }
 
     dependencies {
         implementation("org.jetbrains.kotlin:kotlin-reflect")
