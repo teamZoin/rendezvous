@@ -1,7 +1,7 @@
 package com.zoin.rendezvous.jwt
 
 import com.fasterxml.jackson.core.JsonProcessingException
-import com.zoin.rendezvous.InfraEnvHolder
+import com.zoin.rendezvous.UtilEnvHolder
 import com.zoin.rendezvous.util.authToken.AuthTokenUtil
 import com.zoin.rendezvous.util.authToken.TokenPayload
 import io.jsonwebtoken.Claims
@@ -16,12 +16,12 @@ import javax.inject.Named
 
 @Named
 class JwtUtil(
-    private val infraEnvHolder: InfraEnvHolder,
+    private val utilEnvHolder: UtilEnvHolder,
 ) : AuthTokenUtil {
     private val signatureAlgorithm: SignatureAlgorithm = SignatureAlgorithm.HS256
     private val secretKey: Key =
         SecretKeySpec(
-            Base64.getEncoder().encode(infraEnvHolder.jwtSecretKey.toByteArray()),
+            Base64.getEncoder().encode(utilEnvHolder.jwtSecretKey.toByteArray()),
             signatureAlgorithm.jcaName,
         )
 

@@ -1,9 +1,9 @@
 package com.zoin.rendezvous
 
-class InfraEnvHolder(
+class UtilEnvHolder(
     private val activeProfiles: Array<String>,
 ) {
-    lateinit var emailConfig: EmailConfig
+    lateinit var jwtSecretKey: String
 
     companion object {
         const val PROFILE_LOCAL = "local"
@@ -17,13 +17,4 @@ class InfraEnvHolder(
     fun isProd(): Boolean {
         return activeProfiles.contains(PROFILE_PROD)
     }
-
-    fun setEmailConfig(username: String, password: String) {
-        emailConfig = EmailConfig(username, password)
-    }
 }
-
-data class EmailConfig(
-    val address: String,
-    val password: String,
-)
