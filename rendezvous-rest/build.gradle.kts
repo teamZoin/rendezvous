@@ -1,6 +1,5 @@
 dependencies {
     implementation(project(":rendezvous-core"))
-    implementation(project(":rendezvous-data"))
     implementation(project(":rendezvous-infra"))
     implementation(project(":rendezvous-util"))
 
@@ -17,6 +16,4 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:_")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:_")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:_")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
