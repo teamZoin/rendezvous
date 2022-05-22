@@ -3,11 +3,13 @@ package com.zoin.rendezvous.api
 import com.zoin.rendezvous.api.`interface`.Response
 import com.zoin.rendezvous.api.`interface`.dto.SaveRendezvousReqDto
 import com.zoin.rendezvous.domain.rendezvous.usecase.CreateRendezvousUseCase
+import com.zoin.rendezvous.domain.rendezvous.usecase.DeleteRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.UpdateRendezvousUseCase
 import com.zoin.rendezvous.resolver.AuthTokenPayload
 import com.zoin.rendezvous.util.authToken.TokenPayload
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,6 +24,7 @@ class RendezvousController(
     private val createRendezvousUseCase: CreateRendezvousUseCase,
     private val readRendezvousUseCase: ReadRendezvousUseCase,
     private val updateRendezvousUseCase: UpdateRendezvousUseCase,
+    private val deleteRendezvousUseCase: DeleteRendezvousUseCase,
 ) {
     @PostMapping("")
     fun createRendezvous(
@@ -84,6 +87,22 @@ class RendezvousController(
         )
         return Response(
             message = "번개 업데이트 성공",
+        )
+    }
+
+    @DeleteMapping("/{id}")
+    fun deleteRendezvous(
+        @AuthTokenPayload payload: TokenPayload,
+        @PathVariable(value = "id") rendezvousId: Long,
+    ): Response<Unit> {
+        deleteRendezvousUseCase.execute(
+            DeleteRendezvousUseCase.Command(
+                userId = payload.userId,
+                rendezvousId = rendezvousId,
+            )
+        )
+        return Response(
+            message = "번개 삭제 성공"
         )
     }
 }
