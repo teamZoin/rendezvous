@@ -81,6 +81,20 @@ class Rendezvous(
         participants = newParticipantList
     }
 
+    fun updateByCreator(
+        title: String,
+        appointmentTime: LocalDateTime,
+        location: String,
+        requiredParticipantsCount: Int,
+        description: String? = null,
+    ) {
+        this.title = title
+        this.appointmentTime = appointmentTime
+        this.location = location
+        this.requiredParticipantsCount = requiredParticipantsCount
+        if (!description.isNullOrBlank()) this.description = description
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

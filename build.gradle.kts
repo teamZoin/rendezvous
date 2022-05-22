@@ -55,6 +55,7 @@ subprojects {
     apply(plugin = "idea")
     apply(plugin = "kotlin")
     apply(plugin = "kotlin-kapt")
+    apply(plugin = "kotlin-allopen")
 
     apply(plugin = "io.spring.dependency-management")
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
@@ -77,6 +78,14 @@ subprojects {
         testImplementation("io.kotest:kotest-framework-datatest:_")
         testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:_")
         testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:_")
+    }
+
+    allOpen {
+        annotations(
+            "javax.inject.Named",
+            "javax.transaction.Transactional",
+            "jakarta.inject.Named",
+        )
     }
 }
 

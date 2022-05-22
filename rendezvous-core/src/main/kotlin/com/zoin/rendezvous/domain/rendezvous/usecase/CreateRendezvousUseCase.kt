@@ -12,7 +12,7 @@ class CreateRendezvousUseCase(
     private val rendezvousRepository: RendezvousRepository,
 ) {
     data class Command(
-        val userId: Long,
+        val creatorId: Long,
         val title: String,
         val appointmentTime: LocalDateTime,
         val location: String,
@@ -21,9 +21,9 @@ class CreateRendezvousUseCase(
     )
 
     fun execute(command: Command) {
-        val (userId, title, appointmentTime, location, requiredParticipantsCount, description) = command
+        val (creatorId, title, appointmentTime, location, requiredParticipantsCount, description) = command
         val creator =
-            userRepository.findById(userId).orElseThrow { IllegalArgumentException("user not found. userId: $userId") }
+            userRepository.findById(creatorId).orElseThrow { IllegalArgumentException("user not found. userId: $creatorId") }
         val newRendezvous = Rendezvous(
             creator = creator,
             title = title,
