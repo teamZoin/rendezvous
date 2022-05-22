@@ -19,7 +19,7 @@ class ObjectMapperConfig {
         .registerKotlinModule()
         .registerModule(
             JavaTimeModule().apply {
-                val dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                val dateTimeFormat = DateTimeFormatter.ISO_LOCAL_DATE_TIME
                 this.addSerializer(LocalDateTime::class.java, LocalDateTimeSerializer(dateTimeFormat))
                 this.addDeserializer(LocalDateTime::class.java, LocalDateTimeDeserializer(dateTimeFormat))
             }
