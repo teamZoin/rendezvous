@@ -1,15 +1,17 @@
 package com.zoin.rendezvous.api
 
 import com.zoin.rendezvous.api.`interface`.Response
-import com.zoin.rendezvous.api.`interface`.dto.CreateRendezvousReqDto
+import com.zoin.rendezvous.api.`interface`.dto.SaveRendezvousReqDto
 import com.zoin.rendezvous.domain.rendezvous.usecase.CreateRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousUseCase
+import com.zoin.rendezvous.domain.rendezvous.usecase.UpdateRendezvousUseCase
 import com.zoin.rendezvous.resolver.AuthTokenPayload
 import com.zoin.rendezvous.util.authToken.TokenPayload
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -19,18 +21,18 @@ import org.springframework.web.bind.annotation.RestController
 class RendezvousController(
     private val createRendezvousUseCase: CreateRendezvousUseCase,
     private val readRendezvousUseCase: ReadRendezvousUseCase,
-
+    private val updateRendezvousUseCase: UpdateRendezvousUseCase,
 ) {
     @PostMapping("")
     fun createRendezvous(
         @AuthTokenPayload payload: TokenPayload,
-        @RequestBody req: CreateRendezvousReqDto,
+        @RequestBody req: SaveRendezvousReqDto,
     ): Response<Unit> {
         val (userId) = payload
 
         createRendezvousUseCase.execute(
             command = CreateRendezvousUseCase.Command(
-                userId = userId,
+                creatorId = userId,
                 title = req.title,
                 appointmentTime = req.appointmentTime,
                 location = req.location,
@@ -60,6 +62,28 @@ class RendezvousController(
             status = HttpStatus.OK.value(),
             message = "번개 조회 성공",
             data = rendezvousAndReader
+        )
+    }
+
+    @PutMapping("/{id}")
+    fun putRendezvous(
+        @AuthTokenPayload payload: TokenPayload,
+        @PathVariable(value = "id") rendezvousId: Long,
+        @RequestBody updateRendezvousReq: SaveRendezvousReqDto,
+    ): Response<Unit> {
+        updateRendezvousUseCase.execute(
+            UpdateRendezvousUseCase.Command(
+                userId = payload.userId,
+                rendezvousId = rendezvousId,
+                title = updateRendezvousReq.title,
+                appointmentTime = updateRendezvousReq.appointmentTime,
+                location = updateRendezvousReq.location,
+                requiredParticipantsCount = updateRendezvousReq.requiredParticipantsCount,
+                description = updateRendezvousReq.description,
+            )
+        )
+        return Response(
+            message = "번개 업데이트 성공",
         )
     }
 }

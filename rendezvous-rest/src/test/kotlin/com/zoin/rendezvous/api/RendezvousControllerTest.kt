@@ -2,7 +2,7 @@ package com.zoin.rendezvous.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
-import com.zoin.rendezvous.api.`interface`.dto.CreateRendezvousReqDto
+import com.zoin.rendezvous.api.`interface`.dto.SaveRendezvousReqDto
 import com.zoin.rendezvous.config.mock.MockConfiguration
 import com.zoin.rendezvous.domain.rendezvous.usecase.CreateRendezvousUseCase
 import io.kotest.core.spec.IsolationMode
@@ -38,7 +38,7 @@ class RendezvousControllerTest(
         this.isolationMode = IsolationMode.InstancePerLeaf
 
         this.describe("Rendezvous controller는") {
-            val mockCreateRendezvousReqDto = CreateRendezvousReqDto(
+            val mockCreateRendezvousReqDto = SaveRendezvousReqDto(
                 title = "mockTitle",
                 appointmentTime = LocalDateTime.now(),
                 location = "mockLocation",

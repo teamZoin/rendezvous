@@ -2,7 +2,7 @@ package com.zoin.rendezvous.api.`interface`.dto
 
 import java.time.LocalDateTime
 
-data class CreateRendezvousReqDto(
+data class SaveRendezvousReqDto(
     val title: String,
     val appointmentTime: LocalDateTime,
     val location: String,
