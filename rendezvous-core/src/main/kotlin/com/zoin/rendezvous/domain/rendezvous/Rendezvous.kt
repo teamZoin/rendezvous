@@ -7,6 +7,7 @@ import com.zoin.rendezvous.domain.user.User
 import org.hibernate.annotations.SQLDelete
 import java.time.LocalDateTime
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -45,7 +46,7 @@ class Rendezvous(
     var title: String = title
         private set
 
-    var discription: String? = description
+    var description: String? = description
         private set
 
     var appointmentTime: LocalDateTime = appointmentTime
@@ -60,7 +61,7 @@ class Rendezvous(
     var isClosedByCreator: Boolean = false
         private set
 
-    @ManyToMany(mappedBy = "belongsToRendezvous")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "belongsToRendezvous")
     var participants: List<User> = participants
         private set
 
@@ -78,6 +79,20 @@ class Rendezvous(
         val newParticipantList: List<User> = listOf(*participants.toTypedArray(), user)
 
         participants = newParticipantList
+    }
+
+    fun updateByCreator(
+        title: String,
+        appointmentTime: LocalDateTime,
+        location: String,
+        requiredParticipantsCount: Int,
+        description: String? = null,
+    ) {
+        this.title = title
+        this.appointmentTime = appointmentTime
+        this.location = location
+        this.requiredParticipantsCount = requiredParticipantsCount
+        if (!description.isNullOrBlank()) this.description = description
     }
 
     override fun equals(other: Any?): Boolean {
@@ -99,6 +114,6 @@ class Rendezvous(
     }
 
     override fun toString(): String {
-        return "Rendezvous(author=$creator, deletedAt=$deletedAt, id=$id, title='$title', datetime=$appointmentTime, place='$location', discription=$discription)"
+        return "Rendezvous(author=$creator, deletedAt=$deletedAt, id=$id, title='$title', datetime=$appointmentTime, place='$location', discription=$description)"
     }
 }
