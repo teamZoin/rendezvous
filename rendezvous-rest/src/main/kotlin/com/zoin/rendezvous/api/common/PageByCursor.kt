@@ -1,4 +1,4 @@
-package com.zoin.rendezvous.domain
+package com.zoin.rendezvous.api.common
 
 class PageByCursor<T>(
     val elements: List<T>,

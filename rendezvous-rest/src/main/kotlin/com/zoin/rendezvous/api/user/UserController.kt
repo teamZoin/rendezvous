@@ -1,6 +1,6 @@
 package com.zoin.rendezvous.api.user
 
-import com.zoin.rendezvous.api.`interface`.Response
+import com.zoin.rendezvous.api.common.Response
 import com.zoin.rendezvous.api.user.dto.CheckExistingServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.CheckExitingEmailReqDto
 import com.zoin.rendezvous.api.user.dto.SetUserNotificationReqDto
