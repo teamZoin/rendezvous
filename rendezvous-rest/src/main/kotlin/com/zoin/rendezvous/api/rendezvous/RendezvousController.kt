@@ -1,9 +1,9 @@
 package com.zoin.rendezvous.api.rendezvous
 
-import com.zoin.rendezvous.api.`interface`.Response
+import com.zoin.rendezvous.api.common.PageByCursor
+import com.zoin.rendezvous.api.common.Response
 import com.zoin.rendezvous.api.rendezvous.dto.GetMainReqDto
 import com.zoin.rendezvous.api.rendezvous.dto.SaveRendezvousReqDto
-import com.zoin.rendezvous.domain.PageByCursor
 import com.zoin.rendezvous.domain.rendezvous.RendezvousVO
 import com.zoin.rendezvous.domain.rendezvous.usecase.CreateRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.DeleteRendezvousUseCase
@@ -117,7 +117,7 @@ class RendezvousController(
         @RequestBody getMainReqDto: GetMainReqDto,
     ): Response<PageByCursor<RendezvousVO>> {
         val (size, cursorId) = getMainReqDto
-        val page = readRendezvousListUseCase.execute(
+        val (rendezvousList, hasNext) = readRendezvousListUseCase.execute(
             ReadRendezvousListUseCase.Query(
                 size,
                 cursorId,
@@ -125,7 +125,12 @@ class RendezvousController(
         )
         return Response(
             message = "메인 번개 리스트 조회 성공",
-            data = page,
+            data = PageByCursor(
+                elements = rendezvousList.map { rendezvous ->
+                    RendezvousVO.of(rendezvous, true)
+                },
+                hasNext
+            ),
         )
     }
 }

@@ -1,7 +1,6 @@
 package com.zoin.rendezvous.domain.rendezvous.usecase
 
-import com.zoin.rendezvous.domain.PageByCursor
-import com.zoin.rendezvous.domain.rendezvous.RendezvousVO
+import com.zoin.rendezvous.domain.rendezvous.Rendezvous
 import com.zoin.rendezvous.domain.rendezvous.repository.RendezvousRepository
 import javax.inject.Named
 
@@ -14,13 +13,9 @@ class ReadRendezvousListUseCase(
         val cursorId: Long? = null,
     )
 
-    fun execute(query: Query): PageByCursor<RendezvousVO> {
-        val rendezvous = rendezvousRepository.findPageByCursorLimitSize(query.size, query.cursorId)
-        return PageByCursor(
-            rendezvous.map {
-                RendezvousVO.of(it, true)
-            },
-            rendezvous.isNotEmpty() && rendezvousRepository.hasNextElement(rendezvous[rendezvous.size - 1].mustGetId())
-        )
+    fun execute(query: Query): Pair<List<Rendezvous>, Boolean> {
+        val rendezvousList = rendezvousRepository.findPageByCursorLimitSize(query.size, query.cursorId)
+        val hasNext = rendezvousList.isNotEmpty() && rendezvousRepository.hasNextElement(rendezvousList[rendezvousList.size - 1].mustGetId())
+        return rendezvousList to hasNext
     }
 }

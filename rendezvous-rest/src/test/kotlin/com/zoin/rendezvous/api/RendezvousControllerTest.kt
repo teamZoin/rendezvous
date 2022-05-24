@@ -2,6 +2,7 @@ package com.zoin.rendezvous.api
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ninjasquad.springmockk.MockkBean
+import com.zoin.rendezvous.api.rendezvous.RendezvousController
 import com.zoin.rendezvous.api.rendezvous.dto.SaveRendezvousReqDto
 import com.zoin.rendezvous.config.mock.MockConfiguration
 import com.zoin.rendezvous.domain.rendezvous.usecase.CreateRendezvousUseCase
