@@ -1,9 +1,13 @@
-package com.zoin.rendezvous.api
+package com.zoin.rendezvous.api.rendezvous
 
 import com.zoin.rendezvous.api.`interface`.Response
+import com.zoin.rendezvous.api.`interface`.dto.GetMainReqDto
 import com.zoin.rendezvous.api.`interface`.dto.SaveRendezvousReqDto
+import com.zoin.rendezvous.domain.PageByCursor
+import com.zoin.rendezvous.domain.rendezvous.RendezvousVO
 import com.zoin.rendezvous.domain.rendezvous.usecase.CreateRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.DeleteRendezvousUseCase
+import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousListUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.UpdateRendezvousUseCase
 import com.zoin.rendezvous.resolver.AuthTokenPayload
@@ -25,6 +29,7 @@ class RendezvousController(
     private val readRendezvousUseCase: ReadRendezvousUseCase,
     private val updateRendezvousUseCase: UpdateRendezvousUseCase,
     private val deleteRendezvousUseCase: DeleteRendezvousUseCase,
+    private val readRendezvousListUseCase: ReadRendezvousListUseCase,
 ) {
     @PostMapping("")
     fun createRendezvous(
@@ -103,6 +108,24 @@ class RendezvousController(
         )
         return Response(
             message = "번개 삭제 성공"
+        )
+    }
+
+    @GetMapping("/main")
+    fun getMain(
+        @AuthTokenPayload payload: TokenPayload,
+        @RequestBody getMainReqDto: GetMainReqDto,
+    ): Response<PageByCursor<RendezvousVO>> {
+        val (size, cursorId) = getMainReqDto
+        val page = readRendezvousListUseCase.execute(
+            ReadRendezvousListUseCase.Query(
+                size,
+                cursorId,
+            )
+        )
+        return Response(
+            message = "메인 번개 리스트 조회 성공",
+            data = page,
         )
     }
 }
