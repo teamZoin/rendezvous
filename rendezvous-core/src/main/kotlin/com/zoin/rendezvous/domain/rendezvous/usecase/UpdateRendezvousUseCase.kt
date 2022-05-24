@@ -23,11 +23,8 @@ class UpdateRendezvousUseCase(
 
     @Transactional
     fun execute(command: Command) {
-        val updateAgent =
-            userRepository.findById(command.userId)
-                .orElseThrow { IllegalArgumentException("User not found. user id: ${command.userId}") }
-        val rendezvous = rendezvousRepository.findById(command.rendezvousId)
-            .orElseThrow { IllegalArgumentException("Rendezvous not found. rendezvous id: ${command.rendezvousId}") }
+        val updateAgent = userRepository.findByIdExcludeDeleted(command.userId)
+        val rendezvous = rendezvousRepository.findByIdExcludeDeleted(command.rendezvousId)
 
         if (rendezvous.creator != updateAgent) throw IllegalAccessException("Only creator can update rendezvous.")
 

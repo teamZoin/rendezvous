@@ -13,7 +13,7 @@ class UpdateUserNotificationUseCase(
     )
 
     fun execute(command: Command) {
-        val user = userRepository.findById(command.userId).orElseThrow { IllegalStateException("User not found. userId: ${command.userId}") }
+        val user = userRepository.findByIdExcludeDeleted(command.userId)
 
         if (command.on) {
             user.agreeToGetNotification()
