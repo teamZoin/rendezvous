@@ -5,6 +5,7 @@ import com.zoin.rendezvous.base.SoftDeletable
 import com.zoin.rendezvous.domain.rendezvous.repository.RendezvousParticipantRepository
 import com.zoin.rendezvous.domain.rendezvous.repository.RendezvousRepository
 import com.zoin.rendezvous.domain.user.User
+import com.zoin.rendezvous.domain.user.UserVO
 import org.hibernate.annotations.SQLDelete
 import java.time.LocalDateTime
 import javax.persistence.Entity
@@ -119,5 +120,31 @@ class Rendezvous(
 
     override fun toString(): String {
         return "Rendezvous(author=$creator, deletedAt=$deletedAt, id=$id, title='$title', datetime=$appointmentTime, place='$location', discription=$description)"
+    }
+}
+
+data class RendezvousVO(
+    val id: Long,
+    val creator: UserVO,
+    val title: String,
+    val location: String,
+    val requiredParticipantsCount: Int,
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime,
+    val participants: List<UserVO>? = null,
+    val description: String? = null,
+) {
+    companion object {
+        fun of(rendezvous: Rendezvous, includeParticipants: Boolean = false) = RendezvousVO(
+            id = rendezvous.mustGetId(),
+            creator = UserVO.of(rendezvous.creator),
+            title = rendezvous.title,
+            location = rendezvous.location,
+            requiredParticipantsCount = rendezvous.requiredParticipantsCount,
+            createdAt = rendezvous.createdAt,
+            updatedAt = rendezvous.updatedAt,
+            description = rendezvous.description,
+            participants = if (includeParticipants) rendezvous.participants.map { UserVO.of(it.participant) } else null
+        )
     }
 }

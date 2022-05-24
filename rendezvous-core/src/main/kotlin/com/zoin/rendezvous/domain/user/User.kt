@@ -106,3 +106,27 @@ class User(
         return result
     }
 }
+
+data class UserVO(
+    val id: Long,
+    val serviceId: String,
+    val userName: String,
+    val email: String,
+    val profileImgUrl: String? = null,
+    var agreedToPushNotifications: Boolean,
+    var createdAt: LocalDateTime,
+    var updatedAt: LocalDateTime,
+) {
+    companion object {
+        fun of(user: User) = UserVO(
+            id = user.mustGetId(),
+            serviceId = user.serviceId,
+            userName = user.userName,
+            email = user.email,
+            profileImgUrl = user.profileImgUrl,
+            agreedToPushNotifications = user.agreedToPushNotifications,
+            createdAt = user.createdAt,
+            updatedAt = user.updatedAt,
+        )
+    }
+}
