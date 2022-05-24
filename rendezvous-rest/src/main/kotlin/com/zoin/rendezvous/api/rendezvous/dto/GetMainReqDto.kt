@@ -1,4 +1,4 @@
-package com.zoin.rendezvous.api.`interface`.dto
+package com.zoin.rendezvous.api.rendezvous.dto
 
 data class GetMainReqDto(
     val size: Long,

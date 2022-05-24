@@ -1,4 +1,4 @@
-package com.zoin.rendezvous.api.`interface`.dto
+package com.zoin.rendezvous.api.user.dto
 
 class UpdateUserProfileImageReqDto(
     val profileImgUrl: String

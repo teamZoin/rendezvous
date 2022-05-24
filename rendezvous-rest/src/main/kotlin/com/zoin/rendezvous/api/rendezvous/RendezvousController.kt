@@ -1,8 +1,8 @@
 package com.zoin.rendezvous.api.rendezvous
 
 import com.zoin.rendezvous.api.`interface`.Response
-import com.zoin.rendezvous.api.`interface`.dto.GetMainReqDto
-import com.zoin.rendezvous.api.`interface`.dto.SaveRendezvousReqDto
+import com.zoin.rendezvous.api.rendezvous.dto.GetMainReqDto
+import com.zoin.rendezvous.api.rendezvous.dto.SaveRendezvousReqDto
 import com.zoin.rendezvous.domain.PageByCursor
 import com.zoin.rendezvous.domain.rendezvous.RendezvousVO
 import com.zoin.rendezvous.domain.rendezvous.usecase.CreateRendezvousUseCase
