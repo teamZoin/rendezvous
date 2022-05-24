@@ -2,6 +2,7 @@ package com.zoin.rendezvous.domain.rendezvous
 
 import com.zoin.rendezvous.base.JpaBaseEntity
 import com.zoin.rendezvous.base.SoftDeletable
+import com.zoin.rendezvous.domain.rendezvous.repository.RendezvousParticipantRepository
 import com.zoin.rendezvous.domain.rendezvous.repository.RendezvousRepository
 import com.zoin.rendezvous.domain.user.User
 import org.hibernate.annotations.SQLDelete
@@ -11,8 +12,8 @@ import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.ManyToMany
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
@@ -32,7 +33,6 @@ class Rendezvous(
     appointmentTime: LocalDateTime,
     location: String,
     requiredParticipantsCount: Int,
-    participants: List<User> = arrayListOf(),
     description: String? = null,
     createdAt: LocalDateTime = LocalDateTime.now(),
     updatedAt: LocalDateTime = LocalDateTime.now(),
@@ -61,8 +61,8 @@ class Rendezvous(
     var isClosedByCreator: Boolean = false
         private set
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "belongsToRendezvous")
-    var participants: List<User> = participants
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "rendezvous")
+    var participants: MutableList<RendezvousParticipant> = arrayListOf()
         private set
 
     fun beDeletedBy(rendezvousRepository: RendezvousRepository, creator: User) {
@@ -75,10 +75,12 @@ class Rendezvous(
         return isClosedByCreator || participants.size >= requiredParticipantsCount
     }
 
-    fun addNewParticipant(user: User) {
-        val newParticipantList: List<User> = listOf(*participants.toTypedArray(), user)
-
-        participants = newParticipantList
+    fun addNewParticipant(user: User, rendezvousParticipantRepository: RendezvousParticipantRepository) {
+        val rendezvousParticipant = RendezvousParticipant(
+            rendezvous = this,
+            user = user,
+        )
+        rendezvousParticipantRepository.save(rendezvousParticipant)
     }
 
     fun updateByCreator(
@@ -94,6 +96,8 @@ class Rendezvous(
         this.requiredParticipantsCount = requiredParticipantsCount
         if (!description.isNullOrBlank()) this.description = description
     }
+
+    fun mustGetId() = id ?: throw IllegalStateException("Entity doesn't have ID.")
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
