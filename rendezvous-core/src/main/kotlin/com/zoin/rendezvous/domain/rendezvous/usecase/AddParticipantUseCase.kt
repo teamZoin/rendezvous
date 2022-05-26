@@ -25,11 +25,10 @@ class AddParticipantUseCase(
         val rendezvous = rendezvousRepository.findByIdExcludeDeleted(command.rendezvousId)
         val user = userRepository.findByIdExcludeDeleted(command.userId)
 
-        rendezvous.increaseParticipantsCount()
-
         val participants = rendezvous.participants.map { it.participant }
         if (participants.contains(user)) throw IllegalStateException("Already participated user.")
 
         rendezvous.addNewParticipant(user, rendezvousParticipantRepository)
+        rendezvousRepository.save(rendezvous) // TODO: 더티체킹 확인
     }
 }

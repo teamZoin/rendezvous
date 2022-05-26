@@ -70,7 +70,7 @@ class Rendezvous(
         private set
 
     fun beDeletedBy(rendezvousRepository: RendezvousRepository, creator: User) {
-        if (creator != this.creator) throw IllegalAccessException("번개 생성자가 아닙니다.")
+        if (creator != this.creator) throw IllegalAccessException("번개 작성자가 아닙니다.")
         if (isClosedByCreator) throw IllegalStateException("이미 삭제된 번개입니다.")
         rendezvousRepository.delete(this)
     }
@@ -80,11 +80,22 @@ class Rendezvous(
     }
 
     fun addNewParticipant(user: User, rendezvousParticipantRepository: RendezvousParticipantRepository) {
+        if (currentParticipantsCount >= requiredParticipantsCount) throw IllegalStateException("이미 마감된 번개입니다.")
+
         val rendezvousParticipant = RendezvousParticipant(
             rendezvous = this,
             user = user,
         )
         rendezvousParticipantRepository.save(rendezvousParticipant)
+
+        currentParticipantsCount += 1
+    }
+
+    fun deleteNewParticipant(user: User, rendezvousParticipantRepository: RendezvousParticipantRepository) {
+        val participant = rendezvousParticipantRepository.findByRendezvousAndParticipant(this, user)
+            ?: throw IllegalStateException("이미 참여하지 않는 번개입니다.")
+        rendezvousParticipantRepository.delete(participant)
+        currentParticipantsCount -= 1
     }
 
     fun updateByCreator(
@@ -99,11 +110,6 @@ class Rendezvous(
         this.location = location
         this.requiredParticipantsCount = requiredParticipantsCount
         if (!description.isNullOrBlank()) this.description = description
-    }
-
-    fun increaseParticipantsCount() {
-        if (currentParticipantsCount >= requiredParticipantsCount) throw IllegalStateException("Participants exceed.")
-        currentParticipantsCount += 1
     }
 
     fun mustGetId() = id ?: throw IllegalStateException("Entity doesn't have ID.")
