@@ -59,6 +59,9 @@ class Rendezvous(
     var requiredParticipantsCount: Int = requiredParticipantsCount
         private set
 
+    var currentParticipantsCount: Int = 1
+        private set
+
     var isClosedByCreator: Boolean = false
         private set
 
@@ -96,6 +99,11 @@ class Rendezvous(
         this.location = location
         this.requiredParticipantsCount = requiredParticipantsCount
         if (!description.isNullOrBlank()) this.description = description
+    }
+
+    fun increaseParticipantsCount() {
+        if (currentParticipantsCount >= requiredParticipantsCount) throw IllegalStateException("Participants exceed.")
+        currentParticipantsCount += 1
     }
 
     fun mustGetId() = id ?: throw IllegalStateException("Entity doesn't have ID.")

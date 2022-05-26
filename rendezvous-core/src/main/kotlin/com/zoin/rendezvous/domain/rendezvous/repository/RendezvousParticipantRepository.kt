@@ -1,6 +1,6 @@
 package com.zoin.rendezvous.domain.rendezvous.repository
 
-import com.zoin.rendezvous.domain.rendezvous.RendezvousParticipant
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
 
-interface RendezvousParticipantRepository : JpaRepository<RendezvousParticipant, Long>
+@Repository
+interface RendezvousParticipantRepository: RendezvousParticipantJpaRepository
