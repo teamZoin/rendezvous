@@ -1,4 +1,4 @@
-package com.zoin.rendezvous.api.`interface`
+package com.zoin.rendezvous.api.common
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.time.LocalDateTime

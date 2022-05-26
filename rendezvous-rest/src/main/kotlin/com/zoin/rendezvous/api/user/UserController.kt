@@ -1,14 +1,14 @@
 package com.zoin.rendezvous.api.user
 
-import com.zoin.rendezvous.api.`interface`.Response
-import com.zoin.rendezvous.api.`interface`.dto.CheckExistingServiceIdReqDto
-import com.zoin.rendezvous.api.`interface`.dto.CheckExitingEmailReqDto
-import com.zoin.rendezvous.api.`interface`.dto.SetUserNotificationReqDto
-import com.zoin.rendezvous.api.`interface`.dto.UpdateUserProfileImageReqDto
-import com.zoin.rendezvous.api.`interface`.dto.UpdateUserProfileImageResDto
-import com.zoin.rendezvous.api.`interface`.dto.UserLogInReqDto
-import com.zoin.rendezvous.api.`interface`.dto.UserSignUpReqDto
-import com.zoin.rendezvous.api.`interface`.dto.VerifyEmailReqDto
+import com.zoin.rendezvous.api.common.Response
+import com.zoin.rendezvous.api.user.dto.CheckExistingServiceIdReqDto
+import com.zoin.rendezvous.api.user.dto.CheckExitingEmailReqDto
+import com.zoin.rendezvous.api.user.dto.SetUserNotificationReqDto
+import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageReqDto
+import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageResDto
+import com.zoin.rendezvous.api.user.dto.UserLogInReqDto
+import com.zoin.rendezvous.api.user.dto.UserSignUpReqDto
+import com.zoin.rendezvous.api.user.dto.VerifyEmailReqDto
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingServiceIdUseCase
 import com.zoin.rendezvous.domain.user.usecase.CreateUserUseCase
@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/user")
-class Controller(
+@RequestMapping("/api/v1/user")
+class UserController(
     private val createUserUseCase: CreateUserUseCase,
     private val loginUseCase: LoginUseCase,
     private val updateUserProfileImageUseCase: UpdateUserProfileImageUseCase,

@@ -11,7 +11,6 @@ import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.ManyToMany
 import javax.persistence.OneToMany
 import javax.persistence.Table
 
@@ -58,19 +57,14 @@ class User(
     var profileImgUrl: String? = profileImgUrl
         private set
 
+    // TODO: 필드를 도메인 모델에서 제거. (분리하기)
     var agreedToPushNotifications: Boolean = agreedToPushNotifications
         private set
 
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     var madeRendezvous: List<Rendezvous> = listOf()
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    var belongsToRendezvous: List<Rendezvous> = listOf()
-
-    fun participateRendezvous(rendezvous: Rendezvous) {
-        if (rendezvous.isClosed()) throw IllegalAccessException("이미 마감된 번개입니다.")
-        rendezvous.addNewParticipant(this)
-    }
+    fun mustGetId() = id ?: throw IllegalStateException("Entity doesn't have ID.")
 
     fun deleteRendezvous(rendezvousRepository: RendezvousRepository, rendezvous: Rendezvous) {
         val mutableRendezvousList = madeRendezvous.toMutableList()
@@ -110,5 +104,29 @@ class User(
         var result = id?.hashCode() ?: 0
         result = 31 * result + email.hashCode()
         return result
+    }
+}
+
+data class UserVO(
+    val id: Long,
+    val serviceId: String,
+    val userName: String,
+    val email: String,
+    val profileImgUrl: String? = null,
+    var agreedToPushNotifications: Boolean,
+    var createdAt: LocalDateTime,
+    var updatedAt: LocalDateTime,
+) {
+    companion object {
+        fun of(user: User) = UserVO(
+            id = user.mustGetId(),
+            serviceId = user.serviceId,
+            userName = user.userName,
+            email = user.email,
+            profileImgUrl = user.profileImgUrl,
+            agreedToPushNotifications = user.agreedToPushNotifications,
+            createdAt = user.createdAt,
+            updatedAt = user.updatedAt,
+        )
     }
 }

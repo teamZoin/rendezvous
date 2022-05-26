@@ -1,6 +1,6 @@
 package com.zoin.rendezvous.support
 
-import com.zoin.rendezvous.api.`interface`.Response
+import com.zoin.rendezvous.api.common.Response
 import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

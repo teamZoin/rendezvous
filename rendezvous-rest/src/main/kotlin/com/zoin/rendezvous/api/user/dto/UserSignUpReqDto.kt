@@ -1,4 +1,4 @@
-package com.zoin.rendezvous.api.`interface`.dto
+package com.zoin.rendezvous.api.user.dto
 
 data class UserSignUpReqDto(
     val email: String,
