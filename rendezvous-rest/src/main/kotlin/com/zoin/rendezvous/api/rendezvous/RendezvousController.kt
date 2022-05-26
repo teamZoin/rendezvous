@@ -10,8 +10,10 @@ import com.zoin.rendezvous.domain.rendezvous.usecase.CreateRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.DeleteParticipantUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.DeleteRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousListUseCase
+import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousParticipantListUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.UpdateRendezvousUseCase
+import com.zoin.rendezvous.domain.user.UserVO
 import com.zoin.rendezvous.resolver.AuthTokenPayload
 import com.zoin.rendezvous.util.authToken.TokenPayload
 import org.springframework.http.HttpStatus
@@ -34,6 +36,7 @@ class RendezvousController(
     private val readRendezvousListUseCase: ReadRendezvousListUseCase,
     private val addParticipantUseCase: AddParticipantUseCase,
     private val deleteParticipantUseCase: DeleteParticipantUseCase,
+    private val readRendezvousParticipantListUseCase: ReadRendezvousParticipantListUseCase,
 ) {
     @PostMapping("")
     fun createRendezvous(
@@ -168,6 +171,23 @@ class RendezvousController(
 
         return Response(
             message = "번개 참여 취소 성공"
+        )
+    }
+
+    @GetMapping("/{id}/participants")
+    fun readParticipantList(
+        @AuthTokenPayload tokenPayload: TokenPayload,
+        @PathVariable(value = "id") rendezvousId: Long,
+    ): Response<List<UserVO>> {
+        val participantList = readRendezvousParticipantListUseCase.execute(
+            ReadRendezvousParticipantListUseCase.Query(
+                rendezvousId = rendezvousId,
+                readerId = tokenPayload.userId,
+            )
+        )
+        return Response(
+            message = "번개 참여자 목록 조회 성공",
+            data = participantList,
         )
     }
 }
