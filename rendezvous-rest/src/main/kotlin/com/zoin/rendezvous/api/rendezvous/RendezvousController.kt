@@ -5,6 +5,7 @@ import com.zoin.rendezvous.api.common.Response
 import com.zoin.rendezvous.api.rendezvous.dto.GetMainReqDto
 import com.zoin.rendezvous.api.rendezvous.dto.SaveRendezvousReqDto
 import com.zoin.rendezvous.domain.rendezvous.RendezvousVO
+import com.zoin.rendezvous.domain.rendezvous.usecase.AddParticipantUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.CreateRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.DeleteRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousListUseCase
@@ -30,6 +31,7 @@ class RendezvousController(
     private val updateRendezvousUseCase: UpdateRendezvousUseCase,
     private val deleteRendezvousUseCase: DeleteRendezvousUseCase,
     private val readRendezvousListUseCase: ReadRendezvousListUseCase,
+    private val addParticipantUseCase: AddParticipantUseCase,
 ) {
     @PostMapping("")
     fun createRendezvous(
@@ -131,6 +133,17 @@ class RendezvousController(
                 },
                 hasNext
             ),
+        )
+    }
+
+    @PostMapping("/{id}/participant")
+    fun addParticipant(
+        @AuthTokenPayload tokenPayload: TokenPayload,
+        @PathVariable(value = "id") rendezvousId: Long,
+    ): Response<Unit> {
+        addParticipantUseCase.execute(AddParticipantUseCase.Command(rendezvousId, tokenPayload.userId))
+        return Response(
+            message = "번개 참여 요청 성공"
         )
     }
 }
