@@ -7,6 +7,7 @@ import com.zoin.rendezvous.api.rendezvous.dto.SaveRendezvousReqDto
 import com.zoin.rendezvous.domain.rendezvous.RendezvousVO
 import com.zoin.rendezvous.domain.rendezvous.usecase.AddParticipantUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.CreateRendezvousUseCase
+import com.zoin.rendezvous.domain.rendezvous.usecase.DeleteParticipantUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.DeleteRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousListUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousUseCase
@@ -32,6 +33,7 @@ class RendezvousController(
     private val deleteRendezvousUseCase: DeleteRendezvousUseCase,
     private val readRendezvousListUseCase: ReadRendezvousListUseCase,
     private val addParticipantUseCase: AddParticipantUseCase,
+    private val deleteParticipantUseCase: DeleteParticipantUseCase,
 ) {
     @PostMapping("")
     fun createRendezvous(
@@ -141,9 +143,31 @@ class RendezvousController(
         @AuthTokenPayload tokenPayload: TokenPayload,
         @PathVariable(value = "id") rendezvousId: Long,
     ): Response<Unit> {
-        addParticipantUseCase.execute(AddParticipantUseCase.Command(rendezvousId, tokenPayload.userId))
+        addParticipantUseCase.execute(
+            AddParticipantUseCase.Command(
+                rendezvousId = rendezvousId,
+                userId = tokenPayload.userId
+            )
+        )
         return Response(
             message = "번개 참여 요청 성공"
+        )
+    }
+
+    @DeleteMapping("/{id}/participant")
+    fun deleteParticipant(
+        @AuthTokenPayload tokenPayload: TokenPayload,
+        @PathVariable(value = "id") rendezvousId: Long,
+    ): Response<Unit> {
+        deleteParticipantUseCase.execute(
+            DeleteParticipantUseCase.Command(
+                rendezvousId = rendezvousId,
+                userId = tokenPayload.userId,
+            )
+        )
+
+        return Response(
+            message = "번개 참여 취소 성공"
         )
     }
 }
