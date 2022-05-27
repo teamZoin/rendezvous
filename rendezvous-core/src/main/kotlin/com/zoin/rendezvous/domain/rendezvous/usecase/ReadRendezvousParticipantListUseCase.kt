@@ -16,9 +16,9 @@ class ReadRendezvousParticipantListUseCase(
     )
 
     fun execute(query: Query): List<UserVO> {
-        val (rendezvousId, renderId) = query
+        val (rendezvousId, readerId) = query
         val rendezvous = rendezvousRepository.findByIdExcludeDeleted(rendezvousId)
-        val reader = userRepository.findByIdExcludeDeleted(renderId)
+        val reader = userRepository.findByIdExcludeDeleted(readerId)
         if (rendezvous.creator != reader) throw IllegalAccessException("번개 작성자가 아닙니다.")
         return rendezvous.participants.map {
             UserVO.of(it.participant)
