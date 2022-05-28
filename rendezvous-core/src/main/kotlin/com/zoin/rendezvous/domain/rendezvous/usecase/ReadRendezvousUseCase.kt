@@ -22,10 +22,8 @@ class ReadRendezvousUseCase(
 
     fun execute(query: Query): RendezvousAndReader {
         val (rendezvousId, userId) = query
-        val reader =
-            userRepository.findById(userId).orElseThrow { IllegalArgumentException("User not found. id: $userId") }
-        val rendezvous = rendezvousRepository.findById(rendezvousId)
-            .orElseThrow { IllegalArgumentException("Rendezvous not found. id: $rendezvousId") }
+        val reader = userRepository.findByIdExcludeDeleted(userId)
+        val rendezvous = rendezvousRepository.findByIdExcludeDeleted(rendezvousId)
         return RendezvousAndReader(
             rendezvous,
             reader == rendezvous.creator

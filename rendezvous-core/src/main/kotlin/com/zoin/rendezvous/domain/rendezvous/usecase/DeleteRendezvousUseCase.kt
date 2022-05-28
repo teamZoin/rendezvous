@@ -15,8 +15,7 @@ class DeleteRendezvousUseCase(
     )
 
     fun execute(command: Command) {
-        val deleteAgent = userRepository.findById(command.userId)
-            .orElseThrow { IllegalArgumentException("User not found. user id: ${command.userId}") }
+        val deleteAgent = userRepository.findByIdExcludeDeleted(command.userId)
         val rendezvous = rendezvousRepository.findByIdExcludeDeleted(command.rendezvousId)
 
         if (rendezvous.creator != deleteAgent) throw IllegalAccessException("Only creator can delete reandezvous.")
