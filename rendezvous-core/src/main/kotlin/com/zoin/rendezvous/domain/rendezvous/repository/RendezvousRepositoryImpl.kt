@@ -4,6 +4,7 @@ import com.querydsl.core.BooleanBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.zoin.rendezvous.domain.rendezvous.QRendezvous.rendezvous
 import com.zoin.rendezvous.domain.rendezvous.Rendezvous
+import com.zoin.rendezvous.domain.user.User
 import org.springframework.stereotype.Component
 
 @Component
@@ -36,5 +37,25 @@ class RendezvousRepositoryImpl(
             .orderBy(rendezvous.createdAt.desc())
             .limit(1)
             .fetch().isNotEmpty()
+    }
+
+    override fun findByCreator(creator: User, isClosed: Boolean, size: Long, cursorId: Long?): List<Rendezvous> {
+        val predicate = if (isClosed) {
+            BooleanBuilder().and(rendezvous.isClosedByCreator)
+                .orNot(rendezvous.currentParticipantsCount.lt(rendezvous.requiredParticipantsCount))
+        } else {
+            BooleanBuilder().andNot(rendezvous.isClosedByCreator)
+                .or(rendezvous.currentParticipantsCount.lt(rendezvous.requiredParticipantsCount))
+        }
+        if (cursorId != null) {
+            predicate.and(
+                rendezvous.id.lt(cursorId)
+            )
+        }
+        return queryFactory.selectFrom(rendezvous)
+            .where(predicate)
+            .orderBy(rendezvous.createdAt.desc())
+            .limit(size)
+            .fetch()
     }
 }
