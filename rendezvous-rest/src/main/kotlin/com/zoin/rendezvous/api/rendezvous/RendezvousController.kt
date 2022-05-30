@@ -6,6 +6,7 @@ import com.zoin.rendezvous.api.rendezvous.dto.GetMainReqDto
 import com.zoin.rendezvous.api.rendezvous.dto.SaveRendezvousReqDto
 import com.zoin.rendezvous.domain.rendezvous.RendezvousVO
 import com.zoin.rendezvous.domain.rendezvous.usecase.AddParticipantUseCase
+import com.zoin.rendezvous.domain.rendezvous.usecase.CloseRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.CreateRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.DeleteParticipantUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.DeleteRendezvousUseCase
@@ -19,6 +20,7 @@ import com.zoin.rendezvous.util.authToken.TokenPayload
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -37,6 +39,7 @@ class RendezvousController(
     private val addParticipantUseCase: AddParticipantUseCase,
     private val deleteParticipantUseCase: DeleteParticipantUseCase,
     private val readRendezvousParticipantListUseCase: ReadRendezvousParticipantListUseCase,
+    private val closeRendezvousUseCase: CloseRendezvousUseCase,
 ) {
     @PostMapping("")
     fun createRendezvous(
@@ -188,6 +191,22 @@ class RendezvousController(
         return Response(
             message = "번개 참여자 목록 조회 성공",
             data = participantList,
+        )
+    }
+
+    @PatchMapping("/{id}/close")
+    fun closeRendezvous(
+        @AuthTokenPayload tokenPayload: TokenPayload,
+        @PathVariable(value = "id") rendezvousId: Long,
+    ): Response<Unit> {
+        closeRendezvousUseCase.execute(
+            CloseRendezvousUseCase.Command(
+                userId = tokenPayload.userId,
+                rendezvousId = rendezvousId,
+            )
+        )
+        return Response(
+            message = "번개 마감 성공"
         )
     }
 }

@@ -71,8 +71,15 @@ class Rendezvous(
 
     fun beDeletedBy(rendezvousRepository: RendezvousRepository, creator: User) {
         if (creator != this.creator) throw IllegalAccessException("번개 작성자가 아닙니다.")
-        if (isClosedByCreator) throw IllegalStateException("이미 삭제된 번개입니다.")
+        if (deletedAt != null) throw IllegalStateException("이미 삭제된 번개입니다.")
         rendezvousRepository.delete(this)
+    }
+
+    fun beClosedBy(rendezvousRepository: RendezvousRepository, user: User) {
+        if (user != this.creator) throw IllegalAccessException("번개 작성자가 아닙니다.")
+        if (isClosed()) throw IllegalStateException("이미 마감된 번개입니다.")
+        isClosedByCreator = true
+        rendezvousRepository.save(this)
     }
 
     fun isClosed(): Boolean {
