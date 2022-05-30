@@ -245,7 +245,7 @@ class UserController(
     fun readRendezvousListCreatedByUser(
         @AuthTokenPayload tokenPayload: TokenPayload,
         @RequestParam(value = "size") size: Long,
-        @RequestParam(value = "cursor") cursorId: Long,
+        @RequestParam(value = "cursor") cursorId: Long? = null,
         @RequestBody req: ReadRendezvousListCreatedByUserReqDto,
     ): Response<List<RendezvousVO>> {
         val rendezvousList = readRendezvousCreatedByUserUseCase.execute(
