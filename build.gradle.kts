@@ -6,6 +6,7 @@ plugins {
     id("org.springframework.boot") version "2.6.7"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("com.google.cloud.tools.jib") version "3.2.1" apply false
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
@@ -36,6 +37,7 @@ configure(springProjects) {
     apply(plugin = "kotlin-spring")
     apply(plugin = "kotlin-jpa")
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    apply(plugin = "com.google.cloud.tools.jib")
 
     repositories {
         mavenCentral()

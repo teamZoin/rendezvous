@@ -1,6 +1,35 @@
+import com.google.cloud.tools.jib.gradle.JibExtension
+
 // plugins {
 //     id("org.asciidoctor.jvm.convert")
 // }
+//
+
+configure<JibExtension> {
+    jib {
+        from {
+            image = "eclipse-temurin:17.0.3_7-jre"
+            platforms {
+                platform {
+                    architecture = "amd64"
+                    os = "linux"
+                }
+            }
+        }
+        to {
+            image = "564549038106.dkr.ecr.ap-northeast-2.amazonaws.com/${project.name}"
+        }
+        container {
+            creationTime = "USE_CURRENT_TIMESTAMP"
+            environment = mapOf(
+                "USE_PROFILE" to "dev"
+            )
+            jvmFlags = listOf(
+                "-Dspring.profiles.active=\$USE_PROFILE",
+            )
+        }
+    }
+}
 
 dependencies {
     implementation(project(":rendezvous-core"))
