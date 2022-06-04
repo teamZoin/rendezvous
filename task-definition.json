@@ -1,0 +1,23 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "rendezvous-app",
+      "image": "564549038106.dkr.ecr.ap-northeast-2.amazonaws.com/rendezvous-rest:latest",
+      "cpu": 10,
+      "memory": 200,
+      "portMappings": [],
+      "essential": true,
+      "environment": [],
+      "mountPoints": [],
+      "volumesFrom": []
+    }
+  ],
+  "family": "rendezvous-rest-task",
+  "volumes": [],
+  "placementConstraints": [],
+  "requiresCompatibilities": [
+    "EC2"
+  ],
+  "registeredAt": "2022-06-03T19:25:27.400000+09:00",
+  "registeredBy": "arn:aws:iam::564549038106:user/kayoung"
+}
