@@ -27,7 +27,6 @@ configure<JibExtension> {
             jvmFlags = listOf(
                 "-Dspring.profiles.active=\$USE_PROFILE",
             )
-            ports = listOf("8080")
         }
     }
 }
