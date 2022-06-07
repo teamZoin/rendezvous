@@ -18,6 +18,8 @@
   "requiresCompatibilities": [
     "EC2"
   ],
+  "memory" : "983",
+  "cpu" : "1024",
   "registeredAt": "2022-06-03T19:25:27.400000+09:00",
   "registeredBy": "arn:aws:iam::564549038106:user/kayoung"
 }
