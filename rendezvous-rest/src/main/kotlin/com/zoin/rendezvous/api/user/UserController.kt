@@ -26,6 +26,7 @@ import com.zoin.rendezvous.resolver.AuthTokenPayload
 import com.zoin.rendezvous.util.authToken.AuthTokenUtil
 import com.zoin.rendezvous.util.authToken.TokenPayload
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -205,5 +206,12 @@ class UserController(
             status = HttpStatus.OK.value(),
             message = message
         )
+    }
+
+    @DeleteMapping("")
+    fun deleteUser(
+        @AuthTokenPayload payload: TokenPayload,
+    ) {
+        // TODO
     }
 }
