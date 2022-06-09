@@ -3,6 +3,7 @@ package com.zoin.rendezvous.api.user
 import com.zoin.rendezvous.api.common.Response
 import com.zoin.rendezvous.api.user.dto.CheckExistingServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.CheckExitingEmailReqDto
+import com.zoin.rendezvous.api.user.dto.CheckPasswordsMatchReqDto
 import com.zoin.rendezvous.api.user.dto.SetUserNotificationReqDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageReqDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageResDto
@@ -13,6 +14,7 @@ import com.zoin.rendezvous.api.user.dto.UserSignUpReqDto
 import com.zoin.rendezvous.api.user.dto.VerifyEmailReqDto
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingServiceIdUseCase
+import com.zoin.rendezvous.domain.user.usecase.CheckIfInputMatchesUserPasswordUseCase
 import com.zoin.rendezvous.domain.user.usecase.CreateUserUseCase
 import com.zoin.rendezvous.domain.user.usecase.LoginUseCase
 import com.zoin.rendezvous.domain.user.usecase.SendVerificationEmailUseCase
@@ -40,6 +42,7 @@ class UserController(
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
     private val updateUserNotificationUseCase: UpdateUserNotificationUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private val checkIfInputMatchesUserPasswordUseCase: CheckIfInputMatchesUserPasswordUseCase,
     private val authTokenUtil: AuthTokenUtil,
 ) {
     @PostMapping("/sign-up")
@@ -172,5 +175,23 @@ class UserController(
         val (on) = setUserNotificationReqDto
         val (userId) = payload
         updateUserNotificationUseCase.execute(UpdateUserNotificationUseCase.Command(userId, on))
+    }
+
+    @PostMapping("/password/match")
+    fun checkPasswordsMatch(
+        @AuthTokenPayload payload: TokenPayload,
+        @RequestBody req: CheckPasswordsMatchReqDto,
+    ): Response<Boolean> {
+        val doesMatch = checkIfInputMatchesUserPasswordUseCase.execute(
+            CheckIfInputMatchesUserPasswordUseCase.Query(
+                userId = payload.userId,
+                input = req.input,
+            )
+        )
+        return Response(
+            status = HttpStatus.OK.value(),
+            message = if (doesMatch) "비밀번호가 일치합니다." else "비밀번호가 일치하지 않습니다.",
+            data = doesMatch,
+        )
     }
 }
