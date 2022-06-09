@@ -80,6 +80,10 @@ class User(
         profileImgUrl = newUrl
     }
 
+    fun changeUsername(newName: String) {
+        userName = newName
+    }
+
     fun agreeToGetNotification() {
         agreedToPushNotifications = true
     }

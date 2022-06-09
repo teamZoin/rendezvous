@@ -6,6 +6,8 @@ import com.zoin.rendezvous.api.user.dto.CheckExitingEmailReqDto
 import com.zoin.rendezvous.api.user.dto.SetUserNotificationReqDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageReqDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageResDto
+import com.zoin.rendezvous.api.user.dto.UpdateUserProfileReqDto
+import com.zoin.rendezvous.api.user.dto.UpdateUserProfileResDto
 import com.zoin.rendezvous.api.user.dto.UserLogInReqDto
 import com.zoin.rendezvous.api.user.dto.UserSignUpReqDto
 import com.zoin.rendezvous.api.user.dto.VerifyEmailReqDto
@@ -16,6 +18,7 @@ import com.zoin.rendezvous.domain.user.usecase.LoginUseCase
 import com.zoin.rendezvous.domain.user.usecase.SendVerificationEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdateUserNotificationUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdateUserProfileImageUseCase
+import com.zoin.rendezvous.domain.user.usecase.UpdateUserProfileUseCase
 import com.zoin.rendezvous.resolver.AuthTokenPayload
 import com.zoin.rendezvous.util.authToken.AuthTokenUtil
 import com.zoin.rendezvous.util.authToken.TokenPayload
@@ -36,6 +39,7 @@ class UserController(
     private val checkAlreadyExistingServiceIdUseCase: CheckAlreadyExistingServiceIdUseCase,
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
     private val updateUserNotificationUseCase: UpdateUserNotificationUseCase,
+    private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val authTokenUtil: AuthTokenUtil,
 ) {
     @PostMapping("/sign-up")
@@ -119,6 +123,27 @@ class UserController(
         )
     }
 
+    @PutMapping("")
+    fun updateProfile(
+        @AuthTokenPayload payload: TokenPayload,
+        @RequestBody req: UpdateUserProfileReqDto,
+    ): Response<UpdateUserProfileResDto> {
+        val updatedUser = updateUserProfileUseCase.execute(
+            UpdateUserProfileUseCase.Command(
+                userId = payload.userId,
+                newUserName = req.newUserName,
+                newProfileImgUrl = req.newProfileImgUrl,
+            )
+        )
+        return Response(
+            status = HttpStatus.OK.value(),
+            data = UpdateUserProfileResDto(
+                updatedUserName = updatedUser.userName,
+                updatedProfileImgUrl = updatedUser.profileImgUrl,
+            )
+        )
+    }
+
     @PutMapping("/profile-image")
     fun updateProfileImage(
         @AuthTokenPayload payload: TokenPayload,
@@ -141,10 +166,11 @@ class UserController(
 
     @PutMapping("/notification")
     fun setUserNotificationOnOrOff(
+        @AuthTokenPayload payload: TokenPayload,
         @RequestBody setUserNotificationReqDto: SetUserNotificationReqDto,
     ) {
         val (on) = setUserNotificationReqDto
-        // TODO: JWT decode 해서 userId 넣어주기
-        updateUserNotificationUseCase.execute(UpdateUserNotificationUseCase.Command(1, on))
+        val (userId) = payload
+        updateUserNotificationUseCase.execute(UpdateUserNotificationUseCase.Command(userId, on))
     }
 }
