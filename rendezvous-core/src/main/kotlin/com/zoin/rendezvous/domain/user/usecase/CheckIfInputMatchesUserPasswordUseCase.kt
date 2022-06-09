@@ -1,5 +1,6 @@
 package com.zoin.rendezvous.domain.user.usecase
 
+import com.zoin.rendezvous.domain.user.User
 import com.zoin.rendezvous.domain.user.repository.UserRepository
 import com.zoin.rendezvous.util.PasswordEncoder
 import javax.inject.Named
@@ -14,9 +15,9 @@ class CheckIfInputMatchesUserPasswordUseCase(
         val input: String,
     )
 
-    fun execute(query: Query): Boolean {
+    fun execute(query: Query): Pair<Boolean, User> {
         val user = userRepository.findByIdExcludeDeleted(query.userId)
         val encodedInput = passwordEncoder.encode(user.salt, query.input)
-        return user.hashedPassword.contentEquals(encodedInput)
+        return user.hashedPassword.contentEquals(encodedInput) to user
     }
 }

@@ -3,8 +3,8 @@ package com.zoin.rendezvous.api.user
 import com.zoin.rendezvous.api.common.Response
 import com.zoin.rendezvous.api.user.dto.CheckExistingServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.CheckExitingEmailReqDto
-import com.zoin.rendezvous.api.user.dto.CheckPasswordsMatchReqDto
 import com.zoin.rendezvous.api.user.dto.SetUserNotificationReqDto
+import com.zoin.rendezvous.api.user.dto.UpdatePasswordReqDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageReqDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageResDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileReqDto
@@ -18,6 +18,7 @@ import com.zoin.rendezvous.domain.user.usecase.CheckIfInputMatchesUserPasswordUs
 import com.zoin.rendezvous.domain.user.usecase.CreateUserUseCase
 import com.zoin.rendezvous.domain.user.usecase.LoginUseCase
 import com.zoin.rendezvous.domain.user.usecase.SendVerificationEmailUseCase
+import com.zoin.rendezvous.domain.user.usecase.UpdatePasswordUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdateUserNotificationUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdateUserProfileImageUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdateUserProfileUseCase
@@ -43,6 +44,7 @@ class UserController(
     private val updateUserNotificationUseCase: UpdateUserNotificationUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val checkIfInputMatchesUserPasswordUseCase: CheckIfInputMatchesUserPasswordUseCase,
+    private val updatePasswordUseCase: UpdatePasswordUseCase,
     private val authTokenUtil: AuthTokenUtil,
 ) {
     @PostMapping("/sign-up")
@@ -177,21 +179,31 @@ class UserController(
         updateUserNotificationUseCase.execute(UpdateUserNotificationUseCase.Command(userId, on))
     }
 
-    @PostMapping("/password/match")
-    fun checkPasswordsMatch(
+    @PutMapping("/password")
+    fun updatePassword(
         @AuthTokenPayload payload: TokenPayload,
-        @RequestBody req: CheckPasswordsMatchReqDto,
-    ): Response<Boolean> {
-        val doesMatch = checkIfInputMatchesUserPasswordUseCase.execute(
+        @RequestBody req: UpdatePasswordReqDto,
+    ): Response<Any> {
+        val (doesMatch, user) = checkIfInputMatchesUserPasswordUseCase.execute(
             CheckIfInputMatchesUserPasswordUseCase.Query(
                 userId = payload.userId,
-                input = req.input,
+                input = req.password,
             )
         )
+
+        val message = if (doesMatch) {
+            updatePasswordUseCase.execute(
+                UpdatePasswordUseCase.Command(
+                    user,
+                    req.newPassword,
+                )
+            )
+            "비밀번호가 변경되었습니다."
+        } else "비밀번호가 일치하지 않습니다."
+
         return Response(
             status = HttpStatus.OK.value(),
-            message = if (doesMatch) "비밀번호가 일치합니다." else "비밀번호가 일치하지 않습니다.",
-            data = doesMatch,
+            message = message
         )
     }
 }

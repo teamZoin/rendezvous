@@ -84,6 +84,11 @@ class User(
         userName = newName
     }
 
+    fun changePassword(newSalt: ByteArray, newHashedPassword: ByteArray) {
+        this.salt = newSalt
+        this.hashedPassword = newHashedPassword
+    }
+
     fun agreeToGetNotification() {
         agreedToPushNotifications = true
     }
