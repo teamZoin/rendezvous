@@ -3,6 +3,7 @@ package com.zoin.rendezvous.api.user
 import com.zoin.rendezvous.api.common.Response
 import com.zoin.rendezvous.api.user.dto.CheckExistingServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.CheckExitingEmailReqDto
+import com.zoin.rendezvous.api.user.dto.SearchUserByServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.SetUserNotificationReqDto
 import com.zoin.rendezvous.api.user.dto.UpdatePasswordReqDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageReqDto
@@ -12,11 +13,13 @@ import com.zoin.rendezvous.api.user.dto.UpdateUserProfileResDto
 import com.zoin.rendezvous.api.user.dto.UserLogInReqDto
 import com.zoin.rendezvous.api.user.dto.UserSignUpReqDto
 import com.zoin.rendezvous.api.user.dto.VerifyEmailReqDto
+import com.zoin.rendezvous.domain.user.UserVO
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingServiceIdUseCase
 import com.zoin.rendezvous.domain.user.usecase.CheckIfInputMatchesUserPasswordUseCase
 import com.zoin.rendezvous.domain.user.usecase.CreateUserUseCase
 import com.zoin.rendezvous.domain.user.usecase.LoginUseCase
+import com.zoin.rendezvous.domain.user.usecase.SearchUserByServiceIdUseCase
 import com.zoin.rendezvous.domain.user.usecase.SendVerificationEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdatePasswordUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdateUserNotificationUseCase
@@ -27,6 +30,7 @@ import com.zoin.rendezvous.util.authToken.AuthTokenUtil
 import com.zoin.rendezvous.util.authToken.TokenPayload
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -46,6 +50,7 @@ class UserController(
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val checkIfInputMatchesUserPasswordUseCase: CheckIfInputMatchesUserPasswordUseCase,
     private val updatePasswordUseCase: UpdatePasswordUseCase,
+    private val searchUserByServiceIdUseCase: SearchUserByServiceIdUseCase,
     private val authTokenUtil: AuthTokenUtil,
 ) {
     @PostMapping("/sign-up")
@@ -208,10 +213,25 @@ class UserController(
         )
     }
 
-    @DeleteMapping("")
+    @DeleteMapping
     fun deleteUser(
         @AuthTokenPayload payload: TokenPayload,
     ) {
         // TODO
+    }
+
+    @GetMapping
+    fun searchUserByServiceId(
+        @RequestBody req: SearchUserByServiceIdReqDto,
+    ): Response<List<UserVO>> {
+        val userList = searchUserByServiceIdUseCase.execute(
+            SearchUserByServiceIdUseCase.Query(
+                searchIdInput = req.searchInput,
+            )
+        ).map { user -> UserVO.of(user) }
+        return Response(
+            message = "유저 검색 성공",
+            data = userList
+        )
     }
 }
