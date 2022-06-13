@@ -13,6 +13,7 @@ class FriendCustomRepositoryImpl(
             .where(
                 friend1.user.eq(user).and(friend1.friend.eq(other))
                     .or(friend1.user.eq(other).and(friend1.friend.eq(user)))
+                    .and(friend1.status.stringValue().eq("FRIEND"))
             )
             .fetch()
             .isNotEmpty()

@@ -3,6 +3,8 @@ package com.zoin.rendezvous.domain.friend
 import com.zoin.rendezvous.base.JpaBaseEntity
 import com.zoin.rendezvous.domain.user.User
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -23,6 +25,7 @@ class Friend(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
+    @Enumerated(value = EnumType.STRING)
     var status: Status = status
         private set
 
@@ -39,6 +42,10 @@ class Friend(
 
     override fun hashCode(): Int {
         return id?.hashCode() ?: 0
+    }
+
+    override fun toString(): String {
+        return "Friend(user=$user, friend=$friend, id=$id)"
     }
 }
 
