@@ -5,6 +5,8 @@ spring:
     password: rkdudmysql4_
   jpa:
     show-sql: true
+#    hibernate:
+#      ddl-auto: update
 #    properties:
 #      hibernate:
 #        format-sql: true

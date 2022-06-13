@@ -114,6 +114,10 @@ class User(
         result = 31 * result + email.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "User(id=$id, email='$email', serviceId='$serviceId', userName='$userName')"
+    }
 }
 
 data class UserVO(
