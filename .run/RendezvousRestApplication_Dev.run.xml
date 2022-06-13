@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="RendezvousRestApplication:Local" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+  <configuration default="false" name="RendezvousRestApplication:Dev" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <module name="rendezvous.rendezvous-rest.main" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="com.zoin.rendezvous.*" />
+        <option name="PATTERN" value="com.bunggae.rendezvous.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
@@ -13,7 +13,7 @@
       <option name="useCurrentConnection" value="false" />
     </extension>
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.zoin.rendezvous.RendezvousRestApplication" />
-    <option name="ACTIVE_PROFILES" value="local" />
+    <option name="ACTIVE_PROFILES" value="dev" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <option name="SHORTEN_COMMAND_LINE" value="NONE" />
     <method v="2">

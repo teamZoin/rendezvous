@@ -11,6 +11,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor:_")
+    implementation("org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:_")
+    implementation("org.springframework.cloud:spring-cloud-starter-bootstrap:_")
 
     // for infra
     implementation("com.sun.mail:jakarta.mail:_")

@@ -3,23 +3,34 @@ package com.zoin.rendezvous.api.user
 import com.zoin.rendezvous.api.common.Response
 import com.zoin.rendezvous.api.user.dto.CheckExistingServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.CheckExitingEmailReqDto
+import com.zoin.rendezvous.api.user.dto.SearchUserByServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.SetUserNotificationReqDto
+import com.zoin.rendezvous.api.user.dto.UpdatePasswordReqDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageReqDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageResDto
+import com.zoin.rendezvous.api.user.dto.UpdateUserProfileReqDto
+import com.zoin.rendezvous.api.user.dto.UpdateUserProfileResDto
 import com.zoin.rendezvous.api.user.dto.UserLogInReqDto
 import com.zoin.rendezvous.api.user.dto.UserSignUpReqDto
 import com.zoin.rendezvous.api.user.dto.VerifyEmailReqDto
+import com.zoin.rendezvous.domain.user.UserVO
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingServiceIdUseCase
+import com.zoin.rendezvous.domain.user.usecase.CheckIfInputMatchesUserPasswordUseCase
 import com.zoin.rendezvous.domain.user.usecase.CreateUserUseCase
 import com.zoin.rendezvous.domain.user.usecase.LoginUseCase
+import com.zoin.rendezvous.domain.user.usecase.SearchUserByServiceIdUseCase
 import com.zoin.rendezvous.domain.user.usecase.SendVerificationEmailUseCase
+import com.zoin.rendezvous.domain.user.usecase.UpdatePasswordUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdateUserNotificationUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdateUserProfileImageUseCase
+import com.zoin.rendezvous.domain.user.usecase.UpdateUserProfileUseCase
 import com.zoin.rendezvous.resolver.AuthTokenPayload
 import com.zoin.rendezvous.util.authToken.AuthTokenUtil
 import com.zoin.rendezvous.util.authToken.TokenPayload
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -36,6 +47,10 @@ class UserController(
     private val checkAlreadyExistingServiceIdUseCase: CheckAlreadyExistingServiceIdUseCase,
     private val sendVerificationEmailUseCase: SendVerificationEmailUseCase,
     private val updateUserNotificationUseCase: UpdateUserNotificationUseCase,
+    private val updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private val checkIfInputMatchesUserPasswordUseCase: CheckIfInputMatchesUserPasswordUseCase,
+    private val updatePasswordUseCase: UpdatePasswordUseCase,
+    private val searchUserByServiceIdUseCase: SearchUserByServiceIdUseCase,
     private val authTokenUtil: AuthTokenUtil,
 ) {
     @PostMapping("/sign-up")
@@ -119,6 +134,27 @@ class UserController(
         )
     }
 
+    @PutMapping("")
+    fun updateProfile(
+        @AuthTokenPayload payload: TokenPayload,
+        @RequestBody req: UpdateUserProfileReqDto,
+    ): Response<UpdateUserProfileResDto> {
+        val updatedUser = updateUserProfileUseCase.execute(
+            UpdateUserProfileUseCase.Command(
+                userId = payload.userId,
+                newUserName = req.newUserName,
+                newProfileImgUrl = req.newProfileImgUrl,
+            )
+        )
+        return Response(
+            status = HttpStatus.OK.value(),
+            data = UpdateUserProfileResDto(
+                updatedUserName = updatedUser.userName,
+                updatedProfileImgUrl = updatedUser.profileImgUrl,
+            )
+        )
+    }
+
     @PutMapping("/profile-image")
     fun updateProfileImage(
         @AuthTokenPayload payload: TokenPayload,
@@ -141,10 +177,61 @@ class UserController(
 
     @PutMapping("/notification")
     fun setUserNotificationOnOrOff(
+        @AuthTokenPayload payload: TokenPayload,
         @RequestBody setUserNotificationReqDto: SetUserNotificationReqDto,
     ) {
         val (on) = setUserNotificationReqDto
-        // TODO: JWT decode 해서 userId 넣어주기
-        updateUserNotificationUseCase.execute(UpdateUserNotificationUseCase.Command(1, on))
+        val (userId) = payload
+        updateUserNotificationUseCase.execute(UpdateUserNotificationUseCase.Command(userId, on))
+    }
+
+    @PutMapping("/password")
+    fun updatePassword(
+        @AuthTokenPayload payload: TokenPayload,
+        @RequestBody req: UpdatePasswordReqDto,
+    ): Response<Any> {
+        val (doesMatch, user) = checkIfInputMatchesUserPasswordUseCase.execute(
+            CheckIfInputMatchesUserPasswordUseCase.Query(
+                userId = payload.userId,
+                input = req.password,
+            )
+        )
+
+        val message = if (doesMatch) {
+            updatePasswordUseCase.execute(
+                UpdatePasswordUseCase.Command(
+                    user,
+                    req.newPassword,
+                )
+            )
+            "비밀번호가 변경되었습니다."
+        } else "비밀번호가 일치하지 않습니다."
+
+        return Response(
+            status = HttpStatus.OK.value(),
+            message = message
+        )
+    }
+
+    @DeleteMapping
+    fun deleteUser(
+        @AuthTokenPayload payload: TokenPayload,
+    ) {
+        // TODO
+    }
+
+    @GetMapping
+    fun searchUserByServiceId(
+        @RequestBody req: SearchUserByServiceIdReqDto,
+    ): Response<List<UserVO>> {
+        val userList = searchUserByServiceIdUseCase.execute(
+            SearchUserByServiceIdUseCase.Query(
+                searchIdInput = req.searchInput,
+            )
+        ).map { user -> UserVO.of(user) }
+        return Response(
+            message = "유저 검색 성공",
+            data = userList
+        )
     }
 }

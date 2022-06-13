@@ -80,6 +80,15 @@ class User(
         profileImgUrl = newUrl
     }
 
+    fun changeUsername(newName: String) {
+        userName = newName
+    }
+
+    fun changePassword(newSalt: ByteArray, newHashedPassword: ByteArray) {
+        this.salt = newSalt
+        this.hashedPassword = newHashedPassword
+    }
+
     fun agreeToGetNotification() {
         agreedToPushNotifications = true
     }
@@ -104,6 +113,10 @@ class User(
         var result = id?.hashCode() ?: 0
         result = 31 * result + email.hashCode()
         return result
+    }
+
+    override fun toString(): String {
+        return "User(id=$id, email='$email', serviceId='$serviceId', userName='$userName')"
     }
 }
 
