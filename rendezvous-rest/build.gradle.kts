@@ -8,7 +8,7 @@ import com.google.cloud.tools.jib.gradle.JibExtension
 configure<JibExtension> {
     jib {
         from {
-            image = "eclipse-temurin:17.0.3_7-jre"
+            image = "564549038106.dkr.ecr.ap-northeast-2.amazonaws.com/rendezvous-base"
             platforms {
                 platform {
                     architecture = "amd64"
@@ -21,11 +21,8 @@ configure<JibExtension> {
         }
         container {
             creationTime = "USE_CURRENT_TIMESTAMP"
-            environment = mapOf(
-                "USE_PROFILE" to "dev"
-            )
             jvmFlags = listOf(
-                "-Dspring.profiles.active=\$USE_PROFILE",
+                "-Dspring.profiles.active=dev",
             )
         }
     }
