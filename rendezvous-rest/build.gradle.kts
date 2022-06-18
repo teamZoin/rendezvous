@@ -1,4 +1,5 @@
 import com.google.cloud.tools.jib.gradle.JibExtension
+import java.time.LocalDateTime
 
 // plugins {
 //     id("org.asciidoctor.jvm.convert")
@@ -18,6 +19,7 @@ configure<JibExtension> {
         }
         to {
             image = "564549038106.dkr.ecr.ap-northeast-2.amazonaws.com/${project.name}"
+            tags = setOf("latest", LocalDateTime.now().toString().replace(":", "-"))
         }
         container {
             creationTime = "USE_CURRENT_TIMESTAMP"
