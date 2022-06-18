@@ -1,11 +1,13 @@
 name: Deploy EC2 Server
 on: pull_request
+env:
+  VERSION: ${{ github.sha }}
 #on:
 #  push:
 #    branches:
 #      - develop
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -30,11 +32,15 @@ jobs:
 
       - name: Execute Jib Task
         run: ./gradlew :rendezvous-rest:jib
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          service: rendezvous-rest
-          cluster: rendezvous-cluster
-          wait-for-service-stability: true
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Docker Login
+        run: aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 564549038106.dkr.ecr.ap-northeast-2.amazonaws.com/
+      - name: Docker run
+        run: |
+          docker stop rendezvous-app
+          docker rm rendezvous-app
+          docker rmi -f ${{ secrets.IMAGE_REPOSITORY }}:latest
+          dokcer pull ${{ secrets.IMAGE_REPOSITORY }}:latest
+          docker run -p 80:8080 --name rendezvous-app ${{ secrets.IMAGE_REPOSITORY }}:latest
