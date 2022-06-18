@@ -1,11 +1,10 @@
 name: Deploy EC2 Server
-on: pull_request
+on:
+  push:
+    branches:
+      - develop
 env:
   VERSION: ${{ github.sha }}
-#on:
-#  push:
-#    branches:
-#      - develop
 jobs:
   build:
     runs-on: ubuntu-latest
