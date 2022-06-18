@@ -33,6 +33,7 @@ jobs:
       - name: Execute Jib Task
         run: ./gradlew :rendezvous-rest:jib
   deploy:
+    needs: build
     runs-on: self-hosted
     steps:
       - name: Docker Login
@@ -40,7 +41,6 @@ jobs:
       - name: Docker run
         run: |
           sudo docker stop rendezvous-app
-          sudo docker rm rendezvous-app
           sudo docker rmi -f ${{ secrets.IMAGE_REPOSITORY }}:latest
           sudo docker pull ${{ secrets.IMAGE_REPOSITORY }}:latest
-          sudo docker run -p 80:8080 --name rendezvous-app ${{ secrets.IMAGE_REPOSITORY }}:latest
+          sudo docker run --rm -d -p 80:8080 --name rendezvous-app ${{ secrets.IMAGE_REPOSITORY }}:latest
