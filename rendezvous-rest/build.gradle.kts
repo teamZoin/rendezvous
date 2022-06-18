@@ -1,6 +1,34 @@
+import com.google.cloud.tools.jib.gradle.JibExtension
+import java.time.LocalDateTime
+
 // plugins {
 //     id("org.asciidoctor.jvm.convert")
 // }
+//
+
+configure<JibExtension> {
+    jib {
+        from {
+            image = "564549038106.dkr.ecr.ap-northeast-2.amazonaws.com/rendezvous-base"
+            platforms {
+                platform {
+                    architecture = "amd64"
+                    os = "linux"
+                }
+            }
+        }
+        to {
+            image = "564549038106.dkr.ecr.ap-northeast-2.amazonaws.com/${project.name}"
+            tags = setOf("latest", LocalDateTime.now().toString().replace(":", "-"))
+        }
+        container {
+            creationTime = "USE_CURRENT_TIMESTAMP"
+            jvmFlags = listOf(
+                "-Dspring.profiles.active=dev",
+            )
+        }
+    }
+}
 
 dependencies {
     implementation(project(":rendezvous-core"))
