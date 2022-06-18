@@ -36,11 +36,11 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Docker Login
-        run: aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 564549038106.dkr.ecr.ap-northeast-2.amazonaws.com/
+        run: aws ecr get-login-password --region ap-northeast-2 | sudo docker login --username AWS --password-stdin 564549038106.dkr.ecr.ap-northeast-2.amazonaws.com/
       - name: Docker run
         run: |
-          docker stop rendezvous-app
-          docker rm rendezvous-app
-          docker rmi -f ${{ secrets.IMAGE_REPOSITORY }}:latest
-          dokcer pull ${{ secrets.IMAGE_REPOSITORY }}:latest
-          docker run -p 80:8080 --name rendezvous-app ${{ secrets.IMAGE_REPOSITORY }}:latest
+          sudo docker stop rendezvous-app
+          sudo docker rm rendezvous-app
+          sudo docker rmi -f ${{ secrets.IMAGE_REPOSITORY }}:latest
+          sudo docker pull ${{ secrets.IMAGE_REPOSITORY }}:latest
+          sudo docker run -p 80:8080 --name rendezvous-app ${{ secrets.IMAGE_REPOSITORY }}:latest
