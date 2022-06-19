@@ -41,11 +41,11 @@ class RendezvousRepositoryImpl(
 
     override fun findByCreator(creator: User, isClosed: Boolean, size: Long, cursorId: Long?): List<Rendezvous> {
         val predicate = if (isClosed) {
-            BooleanBuilder().and(rendezvous.isClosedByCreator)
+            BooleanBuilder(rendezvous.isClosedByCreator.isTrue)
                 .orNot(rendezvous.currentParticipantsCount.lt(rendezvous.requiredParticipantsCount))
         } else {
-            BooleanBuilder().andNot(rendezvous.isClosedByCreator)
-                .or(rendezvous.currentParticipantsCount.lt(rendezvous.requiredParticipantsCount))
+            BooleanBuilder(rendezvous.isClosedByCreator.isFalse)
+                .and(rendezvous.currentParticipantsCount.lt(rendezvous.requiredParticipantsCount))
         }
         if (cursorId != null) {
             predicate.and(
