@@ -1,0 +1,38 @@
+{
+  "executionRoleArn": "arn:aws:iam::564549038106:role/RendezvousApp-Role",
+  "containerDefinitions": [
+    {
+      "name": "rendezvous-app",
+      "image": "564549038106.dkr.ecr.ap-northeast-2.amazonaws.com/rendezvous-rest:latest",
+      "cpu": 10,
+      "memory": 200,
+      "portMappings": [
+        {
+          "hostPort": "8080",
+          "protocol": "tcp",
+          "containerPort": "8080"
+        }
+      ],
+      "essential": true,
+      "environment": [],
+      "mountPoints": [],
+      "volumesFrom": [],
+      "secrets": [
+        {
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:564549038106:secret:/secret/rendezvous-49qqA1",
+          "name": "rendezvous"
+        },
+        {
+          "valueFrom": "arn:aws:secretsmanager:ap-northeast-2:564549038106:secret:/secret/rendezvous_dev-rhZRsR",
+          "name": "rendezvous_dev"
+        }
+      ]
+    }
+  ],
+  "family": "rendezvous-rest-task",
+  "volumes": [],
+  "placementConstraints": [],
+  "requiresCompatibilities": [
+    "EC2"
+  ]
+}
