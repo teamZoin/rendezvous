@@ -3,8 +3,8 @@ package com.zoin.rendezvous.api.user
 import com.zoin.rendezvous.api.common.Response
 import com.zoin.rendezvous.api.user.dto.CheckExistingServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.CheckExitingEmailReqDto
-import com.zoin.rendezvous.api.user.dto.SearchUserByServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.ReadRendezvousListCreatedByUserReqDto
+import com.zoin.rendezvous.api.user.dto.SearchUserByServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.SetUserNotificationReqDto
 import com.zoin.rendezvous.api.user.dto.UpdatePasswordReqDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageReqDto
@@ -14,9 +14,9 @@ import com.zoin.rendezvous.api.user.dto.UpdateUserProfileResDto
 import com.zoin.rendezvous.api.user.dto.UserLogInReqDto
 import com.zoin.rendezvous.api.user.dto.UserSignUpReqDto
 import com.zoin.rendezvous.api.user.dto.VerifyEmailReqDto
-import com.zoin.rendezvous.domain.user.UserVO
 import com.zoin.rendezvous.domain.rendezvous.RendezvousVO
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousCreatedByUserUseCase
+import com.zoin.rendezvous.domain.user.UserVO
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingServiceIdUseCase
 import com.zoin.rendezvous.domain.user.usecase.CheckIfInputMatchesUserPasswordUseCase
@@ -33,7 +33,6 @@ import com.zoin.rendezvous.util.authToken.AuthTokenUtil
 import com.zoin.rendezvous.util.authToken.TokenPayload
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
