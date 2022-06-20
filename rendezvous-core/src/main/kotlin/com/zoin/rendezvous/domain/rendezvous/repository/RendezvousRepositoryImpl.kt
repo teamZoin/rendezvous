@@ -3,6 +3,7 @@ package com.zoin.rendezvous.domain.rendezvous.repository
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.zoin.rendezvous.domain.rendezvous.QRendezvous.rendezvous
+import com.zoin.rendezvous.domain.rendezvous.QRendezvousParticipant.rendezvousParticipant
 import com.zoin.rendezvous.domain.rendezvous.Rendezvous
 import com.zoin.rendezvous.domain.user.User
 import org.springframework.stereotype.Component
@@ -53,6 +54,27 @@ class RendezvousRepositoryImpl(
             )
         }
         return queryFactory.selectFrom(rendezvous)
+            .where(predicate)
+            .orderBy(rendezvous.createdAt.desc())
+            .limit(size)
+            .fetch()
+    }
+
+    override fun findByParticipant(participant: User, isClosed: Boolean, size: Long, cursorId: Long?): List<Rendezvous> {
+        val predicate = if (cursorId != null) {
+            BooleanBuilder(rendezvous.id.lt(cursorId))
+        } else BooleanBuilder()
+
+        if (isClosed) {
+            predicate.and(rendezvous.isClosedByCreator.isTrue)
+                .orNot(rendezvous.currentParticipantsCount.lt(rendezvous.requiredParticipantsCount))
+        } else {
+            predicate.and(rendezvous.isClosedByCreator.isFalse)
+                .and(rendezvous.currentParticipantsCount.lt(rendezvous.requiredParticipantsCount))
+        }
+
+        return queryFactory.selectFrom(rendezvous)
+            .leftJoin(rendezvousParticipant).on(rendezvous.eq(rendezvousParticipant.rendezvous).and(rendezvousParticipant.participant.eq(participant)))
             .where(predicate)
             .orderBy(rendezvous.createdAt.desc())
             .limit(size)
