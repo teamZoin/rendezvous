@@ -22,6 +22,7 @@ import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingServiceIdUseC
 import com.zoin.rendezvous.domain.user.usecase.CheckIfInputMatchesUserPasswordUseCase
 import com.zoin.rendezvous.domain.user.usecase.CreateUserUseCase
 import com.zoin.rendezvous.domain.user.usecase.LoginUseCase
+import com.zoin.rendezvous.domain.user.usecase.ReadRendezvousListUserParticipatedInUseCase
 import com.zoin.rendezvous.domain.user.usecase.SearchUserByServiceIdUseCase
 import com.zoin.rendezvous.domain.user.usecase.SendVerificationEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdatePasswordUseCase
@@ -56,6 +57,7 @@ class UserController(
     private val updatePasswordUseCase: UpdatePasswordUseCase,
     private val searchUserByServiceIdUseCase: SearchUserByServiceIdUseCase,
     private val readRendezvousCreatedByUserUseCase: ReadRendezvousCreatedByUserUseCase,
+    private val readRendezvousListUserParticipatedInUseCase: ReadRendezvousListUserParticipatedInUseCase,
     private val authTokenUtil: AuthTokenUtil,
 ) {
     @PostMapping("/sign-up")
@@ -240,7 +242,7 @@ class UserController(
         )
     }
 
-    @GetMapping("/rendezvous")
+    @GetMapping("/rendezvous/created")
     fun readRendezvousListCreatedByUser(
         @AuthTokenPayload tokenPayload: TokenPayload,
         @RequestParam(value = "size") size: Long,
@@ -259,6 +261,28 @@ class UserController(
             message = "내가 작성한 번개 리스트 조회 성공",
             data = rendezvousList.map { rendezvous ->
                 RendezvousVO.of(rendezvous)
+            }
+        )
+    }
+
+    @GetMapping("/rendezvous/participated")
+    fun readRendezvousListUserParticipatedIn(
+        @AuthTokenPayload tokenPayload: TokenPayload,
+        @RequestParam(value = "size") size: Long,
+        @RequestParam(value = "cursor") cursorId: Long? = null,
+        @RequestBody req: ReadRendezvousListCreatedByUserReqDto,
+    ): Response<List<RendezvousVO>> {
+        val rendezvousList = readRendezvousListUserParticipatedInUseCase.execute(
+            ReadRendezvousListUserParticipatedInUseCase.Query(
+                userId = tokenPayload.userId,
+                isClosed = req.isClosed,
+                size = size,
+                cursor = cursorId,
+            )
+        )
+        return Response(
+            data = rendezvousList.map {
+                RendezvousVO.of(it)
             }
         )
     }
