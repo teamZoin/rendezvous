@@ -8,4 +8,5 @@ interface RendezvousCustomRepository : SoftDeletableEntityRepository<Rendezvous,
     fun findPageByCursorLimitSize(size: Long, cursorId: Long?): List<Rendezvous>
     fun hasNextElement(endId: Long): Boolean
     fun findByCreator(creator: User, isClosed: Boolean, size: Long, cursorId: Long?): List<Rendezvous>
+    fun findByParticipant(participant: User, isClosed: Boolean, size: Long, cursorId: Long?): List<Rendezvous>
 }
