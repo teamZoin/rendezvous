@@ -3,6 +3,7 @@ package com.zoin.rendezvous.api.user
 import com.zoin.rendezvous.api.common.Response
 import com.zoin.rendezvous.api.user.dto.CheckExistingServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.CheckExitingEmailReqDto
+import com.zoin.rendezvous.api.user.dto.ReadRendezvousListCreatedByUserReqDto
 import com.zoin.rendezvous.api.user.dto.SearchUserByServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.SetUserNotificationReqDto
 import com.zoin.rendezvous.api.user.dto.UpdatePasswordReqDto
@@ -13,6 +14,8 @@ import com.zoin.rendezvous.api.user.dto.UpdateUserProfileResDto
 import com.zoin.rendezvous.api.user.dto.UserLogInReqDto
 import com.zoin.rendezvous.api.user.dto.UserSignUpReqDto
 import com.zoin.rendezvous.api.user.dto.VerifyEmailReqDto
+import com.zoin.rendezvous.domain.rendezvous.RendezvousVO
+import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousCreatedByUserUseCase
 import com.zoin.rendezvous.domain.user.UserVO
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingServiceIdUseCase
@@ -35,6 +38,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -51,6 +55,7 @@ class UserController(
     private val checkIfInputMatchesUserPasswordUseCase: CheckIfInputMatchesUserPasswordUseCase,
     private val updatePasswordUseCase: UpdatePasswordUseCase,
     private val searchUserByServiceIdUseCase: SearchUserByServiceIdUseCase,
+    private val readRendezvousCreatedByUserUseCase: ReadRendezvousCreatedByUserUseCase,
     private val authTokenUtil: AuthTokenUtil,
 ) {
     @PostMapping("/sign-up")
@@ -232,6 +237,29 @@ class UserController(
         return Response(
             message = "유저 검색 성공",
             data = userList
+        )
+    }
+
+    @GetMapping("/rendezvous")
+    fun readRendezvousListCreatedByUser(
+        @AuthTokenPayload tokenPayload: TokenPayload,
+        @RequestParam(value = "size") size: Long,
+        @RequestParam(value = "cursor") cursorId: Long? = null,
+        @RequestBody req: ReadRendezvousListCreatedByUserReqDto,
+    ): Response<List<RendezvousVO>> {
+        val rendezvousList = readRendezvousCreatedByUserUseCase.execute(
+            ReadRendezvousCreatedByUserUseCase.Query(
+                userId = tokenPayload.userId,
+                isClosed = req.isClosed,
+                size = size,
+                cursorId = cursorId,
+            )
+        )
+        return Response(
+            message = "내가 작성한 번개 리스트 조회 성공",
+            data = rendezvousList.map { rendezvous ->
+                RendezvousVO.of(rendezvous)
+            }
         )
     }
 }

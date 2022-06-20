@@ -2,7 +2,6 @@ package com.zoin.rendezvous.api.rendezvous
 
 import com.zoin.rendezvous.api.common.PageByCursor
 import com.zoin.rendezvous.api.common.Response
-import com.zoin.rendezvous.api.rendezvous.dto.GetMainReqDto
 import com.zoin.rendezvous.api.rendezvous.dto.SaveRendezvousReqDto
 import com.zoin.rendezvous.domain.rendezvous.RendezvousVO
 import com.zoin.rendezvous.domain.rendezvous.usecase.AddParticipantUseCase
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -124,9 +124,9 @@ class RendezvousController(
     @GetMapping("/main")
     fun getMain(
         @AuthTokenPayload payload: TokenPayload,
-        @RequestBody getMainReqDto: GetMainReqDto,
+        @RequestParam(value = "size") size: Long,
+        @RequestParam(value = "cursor") cursorId: Long? = null,
     ): Response<PageByCursor<RendezvousVO>> {
-        val (size, cursorId) = getMainReqDto
         val (rendezvousList, hasNext) = readRendezvousListUseCase.execute(
             ReadRendezvousListUseCase.Query(
                 size,
