@@ -17,6 +17,7 @@ class ReportRendezvousUseCase(
         val reporterId: Long,
         val rendezvousId: Long,
         val reportReason: ReportReason,
+        val etcDescription: String?
     )
 
     fun execute(command: Command) {
@@ -36,6 +37,7 @@ class ReportRendezvousUseCase(
                 reporter = user,
                 rendezvous = rendezvous,
                 reportReason = command.reportReason,
+                etcDescription = command.etcDescription,
             )
         )
     }

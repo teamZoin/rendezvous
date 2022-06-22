@@ -17,6 +17,7 @@ class RendezvousReport(
     @ManyToOne val rendezvous: Rendezvous,
     @ManyToOne val reporter: User,
     reportReason: ReportReason,
+    etcDescription: String? = null,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
