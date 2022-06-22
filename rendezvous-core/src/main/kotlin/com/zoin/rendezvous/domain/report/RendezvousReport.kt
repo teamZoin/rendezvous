@@ -24,7 +24,7 @@ class RendezvousReport(
     var id: Long = 0
 
     @Enumerated(value = EnumType.STRING)
-    var reason: ReportReason = reportReason
+    var reportReason: ReportReason? = reportReason
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
