@@ -4,6 +4,7 @@ import com.zoin.rendezvous.base.JpaBaseEntity
 import com.zoin.rendezvous.base.SoftDeletable
 import com.zoin.rendezvous.domain.rendezvous.Rendezvous
 import com.zoin.rendezvous.domain.rendezvous.repository.RendezvousRepository
+import com.zoin.rendezvous.domain.user.repository.UserRepository
 import org.hibernate.annotations.SQLDelete
 import java.time.LocalDateTime
 import javax.persistence.Entity
@@ -95,6 +96,10 @@ class User(
 
     fun disagreeToGetNotification() {
         agreedToPushNotifications = false
+    }
+
+    fun quitService(userRepository: UserRepository) {
+        userRepository.delete(this)
     }
 
     override fun equals(other: Any?): Boolean {
