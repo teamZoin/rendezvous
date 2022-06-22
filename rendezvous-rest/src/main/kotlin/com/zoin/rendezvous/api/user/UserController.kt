@@ -3,6 +3,7 @@ package com.zoin.rendezvous.api.user
 import com.zoin.rendezvous.api.common.Response
 import com.zoin.rendezvous.api.user.dto.CheckExistingServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.CheckExitingEmailReqDto
+import com.zoin.rendezvous.api.user.dto.QuitServiceReqDto
 import com.zoin.rendezvous.api.user.dto.ReadRendezvousListCreatedByUserReqDto
 import com.zoin.rendezvous.api.user.dto.SearchUserByServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.SetUserNotificationReqDto
@@ -16,12 +17,14 @@ import com.zoin.rendezvous.api.user.dto.UserSignUpReqDto
 import com.zoin.rendezvous.api.user.dto.VerifyEmailReqDto
 import com.zoin.rendezvous.domain.rendezvous.RendezvousVO
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousCreatedByUserUseCase
+import com.zoin.rendezvous.domain.user.QuitReason
 import com.zoin.rendezvous.domain.user.UserVO
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.CheckAlreadyExistingServiceIdUseCase
 import com.zoin.rendezvous.domain.user.usecase.CheckIfInputMatchesUserPasswordUseCase
 import com.zoin.rendezvous.domain.user.usecase.CreateUserUseCase
 import com.zoin.rendezvous.domain.user.usecase.LoginUseCase
+import com.zoin.rendezvous.domain.user.usecase.QuitServiceUseCase
 import com.zoin.rendezvous.domain.user.usecase.SearchUserByServiceIdUseCase
 import com.zoin.rendezvous.domain.user.usecase.SendVerificationEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdatePasswordUseCase
@@ -56,6 +59,7 @@ class UserController(
     private val updatePasswordUseCase: UpdatePasswordUseCase,
     private val searchUserByServiceIdUseCase: SearchUserByServiceIdUseCase,
     private val readRendezvousCreatedByUserUseCase: ReadRendezvousCreatedByUserUseCase,
+    private val quitServiceUseCase: QuitServiceUseCase,
     private val authTokenUtil: AuthTokenUtil,
 ) {
     @PostMapping("/sign-up")
@@ -218,13 +222,6 @@ class UserController(
         )
     }
 
-    @DeleteMapping
-    fun deleteUser(
-        @AuthTokenPayload payload: TokenPayload,
-    ) {
-        // TODO
-    }
-
     @GetMapping
     fun searchUserByServiceId(
         @RequestBody req: SearchUserByServiceIdReqDto,
@@ -260,6 +257,24 @@ class UserController(
             data = rendezvousList.map { rendezvous ->
                 RendezvousVO.of(rendezvous)
             }
+        )
+    }
+
+    @DeleteMapping
+    fun quitService(
+        @AuthTokenPayload tokenPayload: TokenPayload,
+        @RequestBody req: QuitServiceReqDto,
+    ): Response<Unit> {
+        quitServiceUseCase.execute(
+            QuitServiceUseCase.Command(
+                userId = tokenPayload.userId,
+                quitReason = QuitReason.findByDesc(req.reason) ?: throw IllegalArgumentException("올바르지 않은 탈퇴 사유"),
+                etcDesc = req.etcDesc,
+            )
+        )
+
+        return Response(
+            message = "탈퇴 성공"
         )
     }
 }
