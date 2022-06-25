@@ -63,7 +63,7 @@ class UserController(
         @RequestBody req: UserSignUpReqDto,
     ): Response<String> {
         val (email, password, userName, serviceId, profileImgUrl) = req
-        createUserUseCase.execute(
+        val createdUser = createUserUseCase.execute(
             CreateUserUseCase.Command(
                 email = email,
                 password = password,
@@ -72,9 +72,17 @@ class UserController(
                 profileImgUrl = profileImgUrl,
             )
         )
+
+        val authToken = authTokenUtil.generateToken(
+            TokenPayload(
+                userId = createdUser.mustGetId()
+            )
+        )
+
         return Response(
             status = HttpStatus.OK.value(),
             message = "회원가입 성공",
+            data = authToken,
         )
     }
 
