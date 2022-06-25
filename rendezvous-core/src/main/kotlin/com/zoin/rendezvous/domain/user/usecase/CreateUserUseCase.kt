@@ -20,7 +20,7 @@ class CreateUserUseCase(
         val profileImgUrl: String,
     )
 
-    fun execute(command: Command) {
+    fun execute(command: Command): User {
         val (email, password, userName, serviceId, profileImgUrl) = command
         val salt = passwordEncoder.generateSalt()
         val user = User(
@@ -33,6 +33,6 @@ class CreateUserUseCase(
         )
 
         userValidator.validate(user)
-        userRepository.save(user)
+        return userRepository.save(user)
     }
 }
