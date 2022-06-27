@@ -22,6 +22,7 @@ class CreateUserUseCase(
 
     fun execute(command: Command): User {
         val (email, password, userName, serviceId, profileImgUrl) = command
+        // TODO: 검증된 이메일인지 체크하기
         val salt = passwordEncoder.generateSalt()
         val user = User(
             userName = userName,

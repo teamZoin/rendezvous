@@ -13,7 +13,7 @@ import javax.persistence.Table
 class EmailAuth(
     val email: String,
     val code: String,
-    val expiresAt: LocalDateTime? = null,
+    val expiresAt: LocalDateTime,
     var isVerified: Boolean? = false,
 ): JpaBaseEntity() {
     @Id
