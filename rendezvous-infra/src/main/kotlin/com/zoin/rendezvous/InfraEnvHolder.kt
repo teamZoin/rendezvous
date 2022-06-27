@@ -6,6 +6,7 @@ class InfraEnvHolder(
 ) {
     lateinit var emailConfig: EmailConfig
     lateinit var jwtSecretKey: String
+    lateinit var ncpConfig: NCPConfig
 
     companion object {
         const val PROFILE_LOCAL = "local"
@@ -23,9 +24,21 @@ class InfraEnvHolder(
     fun setEmailConfig(username: String, password: String) {
         emailConfig = EmailConfig(username, password)
     }
+
+    fun setNcpConfig(accessId: String, secretKey: String) {
+        ncpConfig = NCPConfig(
+            accessId = accessId,
+            secretKey = secretKey,
+        )
+    }
 }
 
 data class EmailConfig(
     val address: String,
     val password: String,
+)
+
+data class NCPConfig(
+    val accessId: String,
+    val secretKey: String,
 )
