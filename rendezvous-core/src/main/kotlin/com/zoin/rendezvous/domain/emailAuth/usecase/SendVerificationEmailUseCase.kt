@@ -20,7 +20,11 @@ class SendVerificationEmailUseCase(
     fun execute(command: Command) {
         val (targetEmail) = command
         val randomCode = genVerificationCode()
-        // TODO: 이미 있을 경우에 삭제해주기.
+
+        emailAuthJpaRepository.findByEmail(targetEmail)?.let {
+            emailAuthJpaRepository.delete(it)
+        }
+
         emailAuthJpaRepository.save(
             EmailAuth(
                 email = targetEmail,
