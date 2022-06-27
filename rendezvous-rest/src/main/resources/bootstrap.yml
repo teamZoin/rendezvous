@@ -5,3 +5,5 @@ cloud:
   aws:
     region:
       static: ap-northeast-2
+okhttp:
+  debug: false

@@ -73,6 +73,12 @@ subprojects {
         implementation("io.github.microutils:kotlin-logging:_")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:_")
 
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:_")
+
+        // okhttp
+        implementation("com.squareup.okhttp3:okhttp:_")
+        implementation("com.squareup.okhttp3:logging-interceptor:_")
+
         testImplementation("io.mockk:mockk:_")
         testImplementation("io.kotest:kotest-runner-junit5:_")
         testImplementation("io.kotest:kotest-assertions-core:_")

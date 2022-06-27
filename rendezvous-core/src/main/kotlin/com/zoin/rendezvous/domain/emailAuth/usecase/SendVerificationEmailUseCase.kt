@@ -1,4 +1,4 @@
-package com.zoin.rendezvous.domain.user.usecase
+package com.zoin.rendezvous.domain.emailAuth.usecase
 
 import com.zoin.rendezvous.infra.MailService
 import javax.inject.Named

@@ -2,6 +2,7 @@ package com.zoin.rendezvous.config
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
@@ -26,4 +27,5 @@ class ObjectMapperConfig {
             }
         )
         .configure(JsonParser.Feature.ALLOW_COMMENTS, true)
+        .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
 }

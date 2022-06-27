@@ -23,7 +23,7 @@ import com.zoin.rendezvous.domain.user.usecase.CheckIfInputMatchesUserPasswordUs
 import com.zoin.rendezvous.domain.user.usecase.CreateUserUseCase
 import com.zoin.rendezvous.domain.user.usecase.LoginUseCase
 import com.zoin.rendezvous.domain.user.usecase.SearchUserByServiceIdUseCase
-import com.zoin.rendezvous.domain.user.usecase.SendVerificationEmailUseCase
+import com.zoin.rendezvous.domain.emailAuth.usecase.SendVerificationEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdatePasswordUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdateUserNotificationUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdateUserProfileImageUseCase
