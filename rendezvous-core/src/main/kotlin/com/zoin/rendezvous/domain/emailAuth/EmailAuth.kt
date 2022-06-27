@@ -14,8 +14,10 @@ class EmailAuth(
     val email: String,
     val code: String,
     val expiresAt: LocalDateTime,
-    var isVerified: Boolean? = false,
 ): JpaBaseEntity() {
+
+    var isVerified: Boolean = false
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
