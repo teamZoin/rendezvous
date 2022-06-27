@@ -27,5 +27,4 @@ class ObjectMapperConfig {
             }
         )
         .configure(JsonParser.Feature.ALLOW_COMMENTS, true)
-        .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
 }
