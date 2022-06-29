@@ -14,6 +14,7 @@ import com.zoin.rendezvous.api.user.dto.UpdateUserProfileResDto
 import com.zoin.rendezvous.api.user.dto.UserLogInReqDto
 import com.zoin.rendezvous.api.user.dto.UserSignUpReqDto
 import com.zoin.rendezvous.api.user.dto.VerifyEmailReqDto
+import com.zoin.rendezvous.domain.emailAuth.usecase.SendVerificationEmailUseCase
 import com.zoin.rendezvous.domain.rendezvous.RendezvousVO
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousCreatedByUserUseCase
 import com.zoin.rendezvous.domain.user.UserVO
@@ -23,7 +24,6 @@ import com.zoin.rendezvous.domain.user.usecase.CheckIfInputMatchesUserPasswordUs
 import com.zoin.rendezvous.domain.user.usecase.CreateUserUseCase
 import com.zoin.rendezvous.domain.user.usecase.LoginUseCase
 import com.zoin.rendezvous.domain.user.usecase.SearchUserByServiceIdUseCase
-import com.zoin.rendezvous.domain.user.usecase.SendVerificationEmailUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdatePasswordUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdateUserNotificationUseCase
 import com.zoin.rendezvous.domain.user.usecase.UpdateUserProfileImageUseCase
