@@ -49,5 +49,3 @@ data class EmailVerification(
     @JsonProperty("verification_code")
     val verificationCode: String,
 )
-
-

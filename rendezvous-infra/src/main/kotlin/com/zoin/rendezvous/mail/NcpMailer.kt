@@ -11,7 +11,6 @@ import retrofit2.create
 import java.util.Base64
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
-import javax.inject.Named
 
 class NcpMailer(
     private val objectMapper: ObjectMapper,

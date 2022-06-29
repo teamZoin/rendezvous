@@ -4,4 +4,3 @@ class Response(
     val requestId: String,
     val count: Long,
 )
-

@@ -14,7 +14,7 @@ class EmailAuth(
     val email: String,
     val code: String,
     val expiresAt: LocalDateTime,
-): JpaBaseEntity() {
+) : JpaBaseEntity() {
 
     var isVerified: Boolean = false
 
