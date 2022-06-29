@@ -7,3 +7,5 @@ cloud:
       static: ap-northeast-2
 okhttp:
   debug: false
+mail:
+  mock: false

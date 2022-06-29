@@ -13,7 +13,6 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import javax.inject.Named
 
-@Named
 class NcpMailer(
     private val objectMapper: ObjectMapper,
     private val infraEnvHolder: InfraEnvHolder,
@@ -57,5 +56,11 @@ class NcpMailer(
                 )
             )
         }
+    }
+}
+
+class MockMailer : MailService {
+    override fun sendVerificationEmail(targetEmail: String, code: String) {
+        // empty body: 가짜 메일러
     }
 }
