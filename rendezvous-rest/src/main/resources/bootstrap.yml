@@ -8,4 +8,4 @@ cloud:
 okhttp:
   debug: false
 mail:
-  mock: false
+  mock: true
