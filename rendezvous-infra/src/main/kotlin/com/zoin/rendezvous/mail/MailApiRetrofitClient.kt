@@ -15,6 +15,15 @@ interface MailApiRetrofitClient {
         @Header("x-ncp-lang") language: String? = "ko-KR",
         @Body req: SendMail.ReqDto<EmailVerification>,
     ): SendMail.ResDto
+
+    @POST("api/v1/mails")
+    suspend fun sendUserQuitLog(
+        @Header("x-ncp-apigw-timestamp") currentTime: Long,
+        @Header("x-ncp-iam-access-key") accessKey: String,
+        @Header("x-ncp-apigw-signature-v2") encryptedSignature: String,
+        @Header("x-ncp-lang") language: String? = "ko-KR",
+        @Body req: SendMail.ReqDto<EmailUserQuitLog>
+    ): SendMail.ResDto
 }
 
 class SendMail {
@@ -27,7 +36,7 @@ class SendMail {
     data class ReqDto<T>(
         @JsonProperty("templateSid")
         val templateId: Long,
-        val recipients: List<Recipient<EmailVerification>>,
+        val recipients: List<Recipient<T>>,
     )
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -48,4 +57,13 @@ class SendMail {
 data class EmailVerification(
     @JsonProperty("verification_code")
     val verificationCode: String,
+)
+
+data class EmailUserQuitLog(
+    @JsonProperty("user_id")
+    val userId: Long,
+    @JsonProperty("user_name")
+    val userName: String,
+    @JsonProperty("quit_reason")
+    val quitReason: String,
 )

@@ -2,6 +2,7 @@ package com.zoin.rendezvous.mail
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.zoin.rendezvous.InfraEnvHolder
+import com.zoin.rendezvous.domain.user.UserQuitLog
 import com.zoin.rendezvous.infra.MailService
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
@@ -25,17 +26,8 @@ class NcpMailer(
         .create()
 
     override fun sendVerificationEmail(targetEmail: String, code: String) {
-        val httpMethod = "POST"
-        val url = "/api/v1/mails"
         val currentTime: Long = System.currentTimeMillis()
-        val secretKey = infraEnvHolder.ncpConfig.secretKey
-        val signingKey = SecretKeySpec(secretKey.toByteArray(), "HmacSHA256")
-        val mac = Mac.getInstance("HmacSHA256")
-        mac.init(signingKey)
-
-        val message = "$httpMethod $url\n$currentTime\n" + infraEnvHolder.ncpConfig.accessId
-        val rawHmac = mac.doFinal(message.toByteArray())
-        val encodeBase64String = Base64.getEncoder().encodeToString(rawHmac)
+        val encodeBase64String = encryptSignature(currentTime)
 
         runBlocking {
             mailApiClient.sendVerificationCode(
@@ -56,10 +48,56 @@ class NcpMailer(
             )
         }
     }
+
+    private fun encryptSignature(currentTime: Long): String {
+        val httpMethod = "POST"
+        val url = "/api/v1/mails"
+        val secretKey = infraEnvHolder.ncpConfig.secretKey
+        val signingKey = SecretKeySpec(secretKey.toByteArray(), "HmacSHA256")
+        val mac = Mac.getInstance("HmacSHA256")
+        mac.init(signingKey)
+
+        val message = "$httpMethod $url\n$currentTime\n" + infraEnvHolder.ncpConfig.accessId
+        val rawHmac = mac.doFinal(message.toByteArray())
+        val encodeBase64String = Base64.getEncoder().encodeToString(rawHmac)
+        return encodeBase64String
+    }
+
+    override fun sendQuitLog(userQuitLog: UserQuitLog) {
+        val currentTime: Long = System.currentTimeMillis()
+        val encodeBase64String = encryptSignature(currentTime)
+
+        runBlocking {
+            mailApiClient.sendUserQuitLog(
+                currentTime = currentTime,
+                accessKey = infraEnvHolder.ncpConfig.accessId,
+                encryptedSignature = encodeBase64String,
+                req = SendMail.ReqDto(
+                    templateId = SendMail.TemplateId.DELETED_USER.id,
+                    recipients = listOf(
+                        SendMail.Recipient(
+                            // address = "we.are.team.zoin@gmail.com",
+                            address = "rkdkdudjd@gmail.com",
+                            parameters = EmailUserQuitLog(
+                                userId = userQuitLog.user.mustGetId(),
+                                userName = userQuitLog.user.userName,
+                                quitReason = userQuitLog.reason.desc,
+                            )
+                        )
+                    )
+                )
+            )
+        }
+    }
 }
 
 class MockMailer : MailService {
     override fun sendVerificationEmail(targetEmail: String, code: String) {
         // empty body: 가짜 메일러
+    }
+
+    override fun sendQuitLog(userQuitLog: UserQuitLog) {
+        // empth body: 가짜 메일러
+
     }
 }
