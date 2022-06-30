@@ -69,7 +69,7 @@ class CreateFriendRequestUseCaseTest : DescribeSpec({
 
         context("유저가 이미 친구인 유저에게 사용할 때") {
             beforeTest {
-                every { mockFriendRepository.ifUsersAreAlreadyFriend(requester, targetUser)} returns true
+                every { mockFriendRepository.ifUsersAreAlreadyFriend(requester, targetUser) } returns true
             }
             it("예외를 던진다") {
                 assertThrows<IllegalStateException> {
@@ -86,7 +86,7 @@ class CreateFriendRequestUseCaseTest : DescribeSpec({
         context("유저가 이미 친구신청을 했을 때") {
             lateinit var mockFriendRelationship: Friend
             beforeTest {
-                every { mockFriendRepository.ifUsersAreAlreadyFriend(requester, targetUser)} returns false
+                every { mockFriendRepository.ifUsersAreAlreadyFriend(requester, targetUser) } returns false
                 mockFriendRelationship = mockk {
                     every { user } returns requester
                     every { friend } returns targetUser
@@ -110,7 +110,7 @@ class CreateFriendRequestUseCaseTest : DescribeSpec({
         context("유저가 이미 친구신청을 받았을 때") {
             lateinit var mockFriendRelationship: Friend
             beforeTest {
-                every { mockFriendRepository.ifUsersAreAlreadyFriend(requester, targetUser)} returns false
+                every { mockFriendRepository.ifUsersAreAlreadyFriend(requester, targetUser) } returns false
                 mockFriendRelationship = mockk {
                     every { user } returns targetUser
                     every { friend } returns requester
@@ -134,6 +134,5 @@ class CreateFriendRequestUseCaseTest : DescribeSpec({
                 }
             }
         }
-
     }
 })

@@ -32,7 +32,7 @@ class ReportRendezvousUseCase(
             throw IllegalStateException("이미 신고한 글입니다.")
         }
 
-        if(command.reportReason == ReportReason.ETC && command.etcDescription == null) {
+        if (command.reportReason == ReportReason.ETC && command.etcDescription == null) {
             throw IllegalArgumentException("신고 사유를 입력해주세요.")
         }
 

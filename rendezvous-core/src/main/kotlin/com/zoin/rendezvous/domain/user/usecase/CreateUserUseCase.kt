@@ -1,5 +1,6 @@
 package com.zoin.rendezvous.domain.user.usecase
 
+import com.zoin.rendezvous.domain.emailAuth.repository.EmailAuthJpaRepository
 import com.zoin.rendezvous.domain.user.User
 import com.zoin.rendezvous.domain.user.UserValidator
 import com.zoin.rendezvous.domain.user.repository.UserRepository
@@ -9,6 +10,7 @@ import javax.inject.Named
 @Named
 class CreateUserUseCase(
     private val userRepository: UserRepository,
+    private val emailAuthJpaRepository: EmailAuthJpaRepository,
     private val userValidator: UserValidator,
     private val passwordEncoder: PasswordEncoder,
 ) {
@@ -20,8 +22,10 @@ class CreateUserUseCase(
         val profileImgUrl: String,
     )
 
-    fun execute(command: Command) {
+    fun execute(command: Command): User {
         val (email, password, userName, serviceId, profileImgUrl) = command
+        checkValidation(email)
+
         val salt = passwordEncoder.generateSalt()
         val user = User(
             userName = userName,
@@ -33,6 +37,11 @@ class CreateUserUseCase(
         )
 
         userValidator.validate(user)
-        userRepository.save(user)
+        return userRepository.save(user)
+    }
+
+    fun checkValidation(email: String) {
+        val emailAuth = emailAuthJpaRepository.findByEmail(email) ?: throw IllegalArgumentException("이메일 인증을 해주세요.")
+        if (!emailAuth.isVerified) throw IllegalStateException("이메일 인증을 완료하세요.")
     }
 }
