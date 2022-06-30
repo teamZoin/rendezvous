@@ -1,0 +1,23 @@
+aws:
+  secretsmanager:
+    name: rendezvous
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+okhttp:
+  debug: true
+mail:
+  mock: false
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/bunggae
+    username: root
+    password: rkdudmysql4_
+  jpa:
+    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#        format-sql: true
