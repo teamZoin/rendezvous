@@ -4,6 +4,7 @@ import com.zoin.rendezvous.domain.user.QuitReason
 import com.zoin.rendezvous.domain.user.UserQuitLog
 import com.zoin.rendezvous.domain.user.repository.UserQuitLogRepository
 import com.zoin.rendezvous.domain.user.repository.UserRepository
+import com.zoin.rendezvous.infra.MailService
 import javax.inject.Named
 import javax.transaction.Transactional
 
@@ -11,6 +12,7 @@ import javax.transaction.Transactional
 class QuitServiceUseCase(
     private val userRepository: UserRepository,
     private val userQuitLogRepository: UserQuitLogRepository,
+    private val mailService: MailService,
 ) {
     data class Command(
         val userId: Long,
@@ -35,6 +37,7 @@ class QuitServiceUseCase(
                 reason = command.quitReason,
                 etcDescription = command.etcDesc
             )
-        )
+        ).also { mailService.sendQuitLog(it) }
+
     }
 }
