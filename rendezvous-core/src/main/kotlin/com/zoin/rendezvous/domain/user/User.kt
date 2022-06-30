@@ -7,6 +7,7 @@ import com.zoin.rendezvous.domain.rendezvous.repository.RendezvousRepository
 import com.zoin.rendezvous.domain.user.repository.UserRepository
 import org.hibernate.annotations.SQLDelete
 import java.time.LocalDateTime
+import javax.persistence.CascadeType
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
@@ -62,7 +63,7 @@ class User(
     var agreedToPushNotifications: Boolean = agreedToPushNotifications
         private set
 
-    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
     var madeRendezvous: List<Rendezvous> = listOf()
 
     fun mustGetId() = id ?: throw IllegalStateException("Entity doesn't have ID.")
