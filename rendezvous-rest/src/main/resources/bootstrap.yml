@@ -9,3 +9,5 @@ okhttp:
   debug: false
 mail:
   mock: true
+jwt:
+  mock: true
