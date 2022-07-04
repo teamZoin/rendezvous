@@ -14,12 +14,11 @@ import java.util.Date
 import javax.crypto.spec.SecretKeySpec
 import javax.inject.Named
 
-@Named
-class JwtUtil(
+open class JwtUtil(
     private val utilEnvHolder: UtilEnvHolder,
 ) : AuthTokenUtil {
-    private val signatureAlgorithm: SignatureAlgorithm = SignatureAlgorithm.HS256
-    private val secretKey: Key =
+    protected val signatureAlgorithm: SignatureAlgorithm = SignatureAlgorithm.HS256
+    protected val secretKey: Key =
         SecretKeySpec(
             Base64.getEncoder().encode(utilEnvHolder.jwtSecretKey.toByteArray()),
             signatureAlgorithm.jcaName,
