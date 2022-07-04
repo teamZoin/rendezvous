@@ -5,11 +5,10 @@ import com.zoin.rendezvous.util.authToken.TokenPayload
 import io.jsonwebtoken.Jwts
 import java.time.Duration
 import java.util.Date
-import javax.inject.Named
 
 class MockJwtUtil(
     private val utilEnvHolder: UtilEnvHolder,
-): JwtUtil(utilEnvHolder) {
+) : JwtUtil(utilEnvHolder) {
     override fun generateToken(payload: TokenPayload): String {
         val now = Date()
         val userId = payload.userId

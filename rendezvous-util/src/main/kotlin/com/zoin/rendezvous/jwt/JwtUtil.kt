@@ -12,7 +12,6 @@ import java.time.Duration
 import java.util.Base64
 import java.util.Date
 import javax.crypto.spec.SecretKeySpec
-import javax.inject.Named
 
 open class JwtUtil(
     private val utilEnvHolder: UtilEnvHolder,
