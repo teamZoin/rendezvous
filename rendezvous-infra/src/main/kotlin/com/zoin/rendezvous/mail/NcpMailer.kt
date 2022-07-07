@@ -18,7 +18,7 @@ class NcpMailer(
     private val customOkHttpClient: OkHttpClient,
 ) : MailService {
     private val mailApiClient: MailApiRetrofitClient = Retrofit.Builder()
-        .baseUrl("https://mail.apigw.ntruss.com/")
+        .baseUrl(MailApiRetrofitClient.BASE_URL)
         .addConverterFactory(JacksonConverterFactory.create(objectMapper))
         .client(customOkHttpClient)
         .build()
