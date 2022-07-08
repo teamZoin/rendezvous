@@ -7,6 +7,11 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface MailApiRetrofitClient {
+
+    companion object {
+        const val BASE_URL = "https://mail.apigw.ntruss.com/"
+    }
+
     @POST("api/v1/mails")
     suspend fun sendVerificationCode(
         @Header("x-ncp-apigw-timestamp") currentTime: Long,
