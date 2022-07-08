@@ -3,7 +3,6 @@ package com.zoin.rendezvous.api.emailAuth
 import com.zoin.rendezvous.api.common.Response
 import com.zoin.rendezvous.api.emailAuth.dto.MakeMockEmailValidReqDto
 import com.zoin.rendezvous.api.emailAuth.dto.VerifyCodeReqDto
-import com.zoin.rendezvous.api.user.dto.VerifyEmailReqDto
 import com.zoin.rendezvous.domain.emailAuth.usecase.MakeMockEmailValidUseCase
 import com.zoin.rendezvous.domain.emailAuth.usecase.VerifyEmailByCodeUseCase
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
