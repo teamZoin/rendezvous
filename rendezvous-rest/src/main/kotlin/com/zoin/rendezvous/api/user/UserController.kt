@@ -11,6 +11,7 @@ import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageReqDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileImageResDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileReqDto
 import com.zoin.rendezvous.api.user.dto.UpdateUserProfileResDto
+import com.zoin.rendezvous.api.user.dto.UserAndRelationship
 import com.zoin.rendezvous.api.user.dto.UserLogInReqDto
 import com.zoin.rendezvous.api.user.dto.UserSignUpReqDto
 import com.zoin.rendezvous.api.user.dto.VerifyEmailReqDto
@@ -235,13 +236,18 @@ class UserController(
 
     @GetMapping
     fun searchUserByServiceId(
+        @AuthTokenPayload payload: TokenPayload,
         @RequestBody req: SearchUserByServiceIdReqDto,
-    ): Response<List<UserVO>> {
+    ): Response<List<UserAndRelationship>> {
         val userList = searchUserByServiceIdUseCase.execute(
             SearchUserByServiceIdUseCase.Query(
+                userId = payload.userId,
                 searchIdInput = req.searchInput,
             )
-        ).map { user -> UserVO.of(user) }
+        ).map { (user, relationship) -> UserAndRelationship(
+            user = UserVO.of(user),
+            relationshipOrder = relationship.ordinal,
+        ) }
         return Response(
             message = "유저 검색 성공",
             data = userList
