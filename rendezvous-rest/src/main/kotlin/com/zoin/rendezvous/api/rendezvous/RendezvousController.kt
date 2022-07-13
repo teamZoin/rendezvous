@@ -9,6 +9,7 @@ import com.zoin.rendezvous.domain.rendezvous.usecase.CloseRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.CreateRendezvousUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.DeleteParticipantUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.DeleteRendezvousUseCase
+import com.zoin.rendezvous.domain.rendezvous.usecase.GetCurrentRendezvousStatusUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousListUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousParticipantListUseCase
 import com.zoin.rendezvous.domain.rendezvous.usecase.ReadRendezvousUseCase
@@ -40,7 +41,20 @@ class RendezvousController(
     private val deleteParticipantUseCase: DeleteParticipantUseCase,
     private val readRendezvousParticipantListUseCase: ReadRendezvousParticipantListUseCase,
     private val closeRendezvousUseCase: CloseRendezvousUseCase,
+    private val getCurrentRendezvousStatusUseCase: GetCurrentRendezvousStatusUseCase,
 ) {
+    @GetMapping("/current")
+    fun getCurrentStatus(
+        @AuthTokenPayload payload: TokenPayload,
+    ): Response<Int> {
+        val res: GetCurrentRendezvousStatusUseCase.CurrentStatus =
+            getCurrentRendezvousStatusUseCase.execute(GetCurrentRendezvousStatusUseCase.Query(payload.userId))
+        return Response(
+            message = "번개 홈 상단 날씨 조회 성공",
+            data = res.ordinal
+        )
+    }
+
     @PostMapping("")
     fun createRendezvous(
         @AuthTokenPayload payload: TokenPayload,
