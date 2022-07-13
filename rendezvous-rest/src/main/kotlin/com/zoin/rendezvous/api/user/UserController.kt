@@ -244,10 +244,12 @@ class UserController(
                 userId = payload.userId,
                 searchIdInput = req.searchInput,
             )
-        ).map { (user, relationship) -> UserAndRelationship(
-            user = UserVO.of(user),
-            relationshipOrder = relationship.ordinal,
-        ) }
+        ).map { (user, relationship) ->
+            UserAndRelationship(
+                user = UserVO.of(user),
+                relationshipOrder = relationship.ordinal,
+            )
+        }
         return Response(
             message = "유저 검색 성공",
             data = userList
