@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface FriendJpaRepository : JpaRepository<Friend, Long> {
     fun findByUserAndFriend(user: User, friend: User): Friend?
+    fun findByUser(user: User): List<Friend>
 }
