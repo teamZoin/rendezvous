@@ -3,6 +3,7 @@ package com.zoin.rendezvous.api.user
 import com.zoin.rendezvous.api.common.Response
 import com.zoin.rendezvous.api.user.dto.CheckExistingServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.CheckExitingEmailReqDto
+import com.zoin.rendezvous.api.user.dto.LoginResDto
 import com.zoin.rendezvous.api.user.dto.ReadRendezvousListCreatedByUserReqDto
 import com.zoin.rendezvous.api.user.dto.SearchUserByServiceIdReqDto
 import com.zoin.rendezvous.api.user.dto.SetUserNotificationReqDto
@@ -90,10 +91,10 @@ class UserController(
     @PostMapping("/log-in")
     fun logIn(
         @RequestBody req: UserLogInReqDto,
-    ): Response<String> {
+    ): Response<LoginResDto> {
         val (email, password) = req
 
-        val userId = loginUseCase.execute(
+        val user = loginUseCase.execute(
             LoginUseCase.Query(
                 email = email,
                 password = password,
@@ -102,14 +103,17 @@ class UserController(
 
         val authToken = authTokenUtil.generateToken(
             TokenPayload(
-                userId = userId
+                userId = user.mustGetId()
             )
         )
 
         return Response(
             status = HttpStatus.OK.value(),
             message = "로그인 성공",
-            data = authToken,
+            data = LoginResDto(
+                UserVO.of(user),
+                authToken
+            ),
         )
     }
 
