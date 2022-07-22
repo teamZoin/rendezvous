@@ -151,7 +151,10 @@ class RendezvousController(
             message = "메인 번개 리스트 조회 성공",
             data = PageByCursor(
                 elements = rendezvousList.map { rendezvous ->
-                    RendezvousVO.of(rendezvous, true)
+                    RendezvousVO.of(rendezvous, true).let {
+                        it.addCreatorIdentity(payload.userId)
+                        it
+                    }
                 },
                 hasNext
             ),

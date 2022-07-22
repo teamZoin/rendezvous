@@ -155,6 +155,7 @@ data class RendezvousVO(
     val updatedAt: LocalDateTime,
     val participants: List<UserVO>? = null,
     val description: String? = null,
+    var isMyRendezvous: Boolean? = null,
 ) {
     companion object {
         fun of(rendezvous: Rendezvous, includeParticipants: Boolean = false) = RendezvousVO(
@@ -169,5 +170,9 @@ data class RendezvousVO(
             description = rendezvous.description,
             participants = if (includeParticipants) rendezvous.participants.map { UserVO.of(it.participant) } else null
         )
+    }
+
+    fun addCreatorIdentity(userId: Long) {
+        isMyRendezvous = userId == creator.id
     }
 }
